@@ -18,7 +18,7 @@ import com.dcits.business.user.dao.RoleDao;
 import com.dcits.business.user.dao.UserDao;
 
 /**
- * Í¨ÓÃserviceÊµÏÖÀà
+ * é€šç”¨serviceå®ç°ç±»
  * @author dcits
  *
  * @param <T>
@@ -47,24 +47,24 @@ public class BaseServiceImpl<T> implements BaseService<T>{
 	}
 
 	/**
-	 * Õâ¸ö·½·¨»áÔÚ¹¹Ôìº¯ÊıºÍspringÒÔÀ´×¢ÈëÖ®ºóÖ´ĞĞ
+	 * è¿™ä¸ªæ–¹æ³•ä¼šåœ¨æ„é€ å‡½æ•°å’Œspringä»¥æ¥æ³¨å…¥ä¹‹åæ‰§è¡Œ
 	 * @Title: init
-	 * @Description: TODO(Í¨¹ı·´ÉäÀ´ÊµÀı»¯baseDao)
-	 * @param @throws Exception Éè¶¨ÎÄ¼ş
-	 * @return void ·µ»ØÀàĞÍ
+	 * @Description: TODO(é€šè¿‡åå°„æ¥å®ä¾‹åŒ–baseDao)
+	 * @param @throws Exception è®¾å®šæ–‡ä»¶
+	 * @return void è¿”å›ç±»å‹
 	 */
 	@PostConstruct
 	public void init() throws Exception
 	{
-		// ¸ù¾İÏàÓ¦µÄclazz,°ÉÏàÓ¦  ****Dao ¸³Öµ¸øBaseDao¼´¿É
-		// 1: »ñÈ¡µ±Ç°clazzµÄÀàĞÍ,È»ºó»ñÈ¡ÏàÓ¦µÄÀàÃû³Æ
+		// æ ¹æ®ç›¸åº”çš„clazz,å§ç›¸åº”  ****Dao èµ‹å€¼ç»™BaseDaoå³å¯
+		// 1: è·å–å½“å‰clazzçš„ç±»å‹,ç„¶åè·å–ç›¸åº”çš„ç±»åç§°
 		String clazzName = clazz.getSimpleName();
 		// 2:Account===>account===>account+Dao  Category====>CategoryDao
-		String clazzDaoName = clazzName.substring(0,1).toLowerCase() + clazzName.substring(1) + "Dao";//toLowerCaseÊ××ÖÄ¸Ğ¡Ğ´
-		// 3: Í¨¹ıclazzDaoName»ñÈ¡ÏàÓ¦ Field×Ö¶Î    this.getClass().getSuperclass():»ñÈ¡µ½ÏàÓ¦BaseServiceImpl
+		String clazzDaoName = clazzName.substring(0,1).toLowerCase() + clazzName.substring(1) + "Dao";//toLowerCaseé¦–å­—æ¯å°å†™
+		// 3: é€šè¿‡clazzDaoNameè·å–ç›¸åº” Fieldå­—æ®µ    this.getClass().getSuperclass():è·å–åˆ°ç›¸åº”BaseServiceImpl
 		Field daoNameField = this.getClass().getSuperclass().getDeclaredField(clazzDaoName);
 		Object object = daoNameField.get(this);
-		// 4: »ñÈ¡baseDao ×Ö¶Î
+		// 4: è·å–baseDao å­—æ®µ
 		Field baseDaoNameField = this.getClass().getSuperclass().getDeclaredField("baseDao");
 		baseDaoNameField.set(this, object);		
 	}

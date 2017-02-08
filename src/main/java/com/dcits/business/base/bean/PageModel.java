@@ -8,27 +8,27 @@ import java.util.List;
 
 /**
  * @author dcits
- * ·ÖÒ³Ä£ĞÍ
+ * åˆ†é¡µæ¨¡å‹
  */
 public class PageModel<T> {
 	
-	//µ±Ç°ĞèÒªÅÅĞòµÄÁĞÃû³Æ
+	//å½“å‰éœ€è¦æ’åºçš„åˆ—åç§°
 	private String orderDataName;
-	//ÅÅĞò·½Ê½,Ä¬ÈÏasc
+	//æ’åºæ–¹å¼,é»˜è®¤asc
 	private String orderType = "asc";
-	//È«¾ÖËÑË÷Ìõ¼ş
+	//å…¨å±€æœç´¢æ¡ä»¶
 	private String searchValue = "";
-	//µ±Ç°Õ¹Ê¾µÄ×Ö¶ÎÃû
+	//å½“å‰å±•ç¤ºçš„å­—æ®µå
 	private List<String> dataParams = new ArrayList<String>();
-	//µ±Ç°ÆğÊ¼Êı¾İµÄÎ»ÖÃ
+	//å½“å‰èµ·å§‹æ•°æ®çš„ä½ç½®
 	private int dataNo=0;
-	//Ã¿Ò³ÏÔÊ¾µÄ¼ÇÂ¼Êı
+	//æ¯é¡µæ˜¾ç¤ºçš„è®°å½•æ•°
 	private int pageSize=10;
-	//×Ü¼ÇÂ¼Êı
+	//æ€»è®°å½•æ•°
 	private int recordCount;
-	//×ÜÒ³Êı
+	//æ€»é¡µæ•°
 	private int pageCount;
-	//´æ·Å·ÖÒ³Êı¾İµÄ¼¯ºÏ
+	//å­˜æ”¾åˆ†é¡µæ•°æ®çš„é›†åˆ
 	private List<T> datas;
 	
 	public PageModel(){

@@ -20,7 +20,7 @@ public class GlobalSettingAction extends BaseAction<GlobalSetting>{
 	 */
 	private static final long serialVersionUID = 1L;	
 	
-	//»ñÈ¡µ±Ç°ÉèÖÃĞÅÏ¢
+	//è·å–å½“å‰è®¾ç½®ä¿¡æ¯
 	@SuppressWarnings("unchecked")
 	public String getWebSettings(){
 		Map<String,GlobalSetting> settingMap = (Map<String, GlobalSetting>) StrutsUtils.getApplicationMap().get("settingMap");
@@ -33,7 +33,7 @@ public class GlobalSettingAction extends BaseAction<GlobalSetting>{
 		
 	}
 	
-	//»ñÈ¡ÁĞ±í
+	//è·å–åˆ—è¡¨
 	public String list(){
 		List<GlobalSetting> settings = globalSettingService.findAll();
 		for(GlobalSetting g:settings){
@@ -46,7 +46,7 @@ public class GlobalSettingAction extends BaseAction<GlobalSetting>{
 		return SUCCESS;
 	}
 	
-	//±à¼­ÉèÖÃÏî
+	//ç¼–è¾‘è®¾ç½®é¡¹
 	public String edit(){
 		for (Map.Entry<String, Object> entry:StrutsUtils.getParametersMap().entrySet()){
 			globalSettingService.updateSetting(entry.getKey(), ((String[])entry.getValue())[0]);

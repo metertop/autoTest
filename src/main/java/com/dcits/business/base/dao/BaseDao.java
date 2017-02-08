@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dcits.business.base.bean.PageModel;
 /**
- * Í¨ÓÃDAO½Ó¿Ú
+ * é€šç”¨DAOæ¥å£
  * @author dcits
  *
  * @param <T>
@@ -12,69 +12,69 @@ import com.dcits.business.base.bean.PageModel;
 
 public interface BaseDao<T> {
 	/**
-	 * ĞÂÔöÒ»¸öÊµÀı
-	 * @param entity ÒªĞÂÔöµÄÊµÀı 
+	 * æ–°å¢ä¸€ä¸ªå®ä¾‹
+	 * @param entity è¦æ–°å¢çš„å®ä¾‹ 
 	 */
 	 Integer save(T entity);
 	
 	/**
-	 * ¸ù¾İÖ÷¼üÉ¾³ıÒ»¸öÊµÀı 
-	 * @param id Ö÷¼ü
+	 * æ ¹æ®ä¸»é”®åˆ é™¤ä¸€ä¸ªå®ä¾‹ 
+	 * @param id ä¸»é”®
 	 */
 	 void delete(int id);
 	
 	/**
-	 * ±à¼­Ö¸¶¨ÊµÀıµÄÏêÏ¸ĞÅÏ¢
-	 * @param entity ÊµÀı 
+	 * ç¼–è¾‘æŒ‡å®šå®ä¾‹çš„è¯¦ç»†ä¿¡æ¯
+	 * @param entity å®ä¾‹ 
 	 */
 	 void edit(T entity);
 	
 	/**
-	 * ¸ù¾İÖ÷¼ü»ñÈ¡¶ÔÓ¦µÄÊµÀı 
-	 * @param id Ö÷¼üÖµ
-	 * @return Èç¹û²éÑ¯³É¹¦£¬·µ»Ø·ûºÏÌõ¼şµÄÊµÀı;Èç¹û²éÑ¯Ê§°Ü£¬·µ»Ønull
+	 * æ ¹æ®ä¸»é”®è·å–å¯¹åº”çš„å®ä¾‹ 
+	 * @param id ä¸»é”®å€¼
+	 * @return å¦‚æœæŸ¥è¯¢æˆåŠŸï¼Œè¿”å›ç¬¦åˆæ¡ä»¶çš„å®ä¾‹;å¦‚æœæŸ¥è¯¢å¤±è´¥ï¼Œè¿”å›null
 	 */
 	 T get(Integer id);
 	
 	/**
-	 * ¸ù¾İÖ÷¼ü»ñÈ¡¶ÔÓ¦µÄÊµÀı 
-	 * @param id Ö÷¼üÖµ
-	 * @return Èç¹û²éÑ¯³É¹¦£¬·µ»Ø·ûºÏÌõ¼şµÄÊµÀı;Èç¹û²éÑ¯Ê§°Ü£¬Å×³ö¿ÕÖ¸ÕëÒì³£
+	 * æ ¹æ®ä¸»é”®è·å–å¯¹åº”çš„å®ä¾‹ 
+	 * @param id ä¸»é”®å€¼
+	 * @return å¦‚æœæŸ¥è¯¢æˆåŠŸï¼Œè¿”å›ç¬¦åˆæ¡ä»¶çš„å®ä¾‹;å¦‚æœæŸ¥è¯¢å¤±è´¥ï¼ŒæŠ›å‡ºç©ºæŒ‡é’ˆå¼‚å¸¸
 	 */
 	 T load(Integer id);
 	
 	/**
-	 * »ñÈ¡ËùÓĞÊµÌåÊµÀıÁĞ±í
-	 * @return ·ûºÏÌõ¼şµÄÊµÀıÁĞ±í
+	 * è·å–æ‰€æœ‰å®ä½“å®ä¾‹åˆ—è¡¨
+	 * @return ç¬¦åˆæ¡ä»¶çš„å®ä¾‹åˆ—è¡¨
 	 */
 	 List<T> findAll();
 	
 	/**
-	 * Í³¼Æ×ÜÊµÌåÊµÀıµÄÊıÁ¿
-	 * @return ×ÜÊıÁ¿
+	 * ç»Ÿè®¡æ€»å®ä½“å®ä¾‹çš„æ•°é‡
+	 * @return æ€»æ•°é‡
 	 */
 	 int totalCount();
 	
 	/**
-	 * »ñÈ¡·ÖÒ³ÁĞ±í
-	 * @param pageNo µ±Ç°Ò³ºÅ
-	 * @param pageSize Ã¿Ò³ÒªÏÔÊ¾µÄ¼ÇÂ¼Êı
-	 * @return ·ûºÏ·ÖÒ³Ìõ¼şµÄ·ÖÒ³Ä£ĞÍÊµÀı
+	 * è·å–åˆ†é¡µåˆ—è¡¨
+	 * @param pageNo å½“å‰é¡µå·
+	 * @param pageSize æ¯é¡µè¦æ˜¾ç¤ºçš„è®°å½•æ•°
+	 * @return ç¬¦åˆåˆ†é¡µæ¡ä»¶çš„åˆ†é¡µæ¨¡å‹å®ä¾‹
 	 */
 	 PageModel<T> findByPager(int dataNo, int pageSize,String orderDataName,String orderType,String searchValue,List<String> dataParams);
 	
 	/**
-	 * ¸ù¾İÖ¸¶¨µÄSQLÓï¾äºÍ²ÎÊıÖµÖ´ĞĞ¸üĞÂÊı¾İµÄ²Ù×÷
-	 * @param sql SQLÓï¾ä
-	 * @param paramValues ²ÎÊıÖµÊı×é
+	 * æ ¹æ®æŒ‡å®šçš„SQLè¯­å¥å’Œå‚æ•°å€¼æ‰§è¡Œæ›´æ–°æ•°æ®çš„æ“ä½œ
+	 * @param sql SQLè¯­å¥
+	 * @param paramValues å‚æ•°å€¼æ•°ç»„
 	 */
 	 void update(String sql);
 	
 	/**
-	 * ¸ù¾İÖ¸¶¨µÄSQLÓï¾äºÍ²ÎÊıÖµÖ´ĞĞµ¥¸ö¶ÔÏóµÄ²éÑ¯²Ù×÷
-	 * @param sql SQLÓï¾ä
-	 * @param paramValues ²ÎÊıÖµ
-	 * @return ·ûºÏÌõ¼şµÄÊµÌå¶ÔÏó
+	 * æ ¹æ®æŒ‡å®šçš„SQLè¯­å¥å’Œå‚æ•°å€¼æ‰§è¡Œå•ä¸ªå¯¹è±¡çš„æŸ¥è¯¢æ“ä½œ
+	 * @param sql SQLè¯­å¥
+	 * @param paramValues å‚æ•°å€¼
+	 * @return ç¬¦åˆæ¡ä»¶çš„å®ä½“å¯¹è±¡
 	 */
 	 T findUnique(String sql);
 }

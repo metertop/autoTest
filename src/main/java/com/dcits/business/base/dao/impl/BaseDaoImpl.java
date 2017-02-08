@@ -12,7 +12,7 @@ import com.dcits.business.base.dao.BaseDao;
 
 /**
  * @author dcits
- * 通用DAO接口的实现类
+ * 閫氱敤DAO鎺ュ彛鐨勫疄鐜扮被
  */
 @SuppressWarnings("unchecked")
 public class BaseDaoImpl<T> implements BaseDao<T>{
@@ -32,7 +32,7 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 	
 
 	public BaseDaoImpl() {
-		//反射获取传入的类
+		//鍙嶅皠鑾峰彇浼犲叆鐨勭被
 		ParameterizedType type=(ParameterizedType)this.getClass().getGenericSuperclass();
 		this.clazz=(Class)type.getActualTypeArguments()[0];	
 	}
@@ -89,7 +89,7 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 		
 		String hql="from "+clazz.getSimpleName();
 		
-		//增加搜索条件
+		//澧炲姞鎼滅储鏉′欢
 		if(searchValue!=""){
 			hql+=" where ";
 			int i = 1;
@@ -103,7 +103,7 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 			
 		}
 
-		//增加排序
+		//澧炲姞鎺掑簭
 		if(orderDataName!=""){
 			hql += " order by " + orderDataName + " " + orderType;
 		}

@@ -21,7 +21,7 @@ public class OperationInterfaceAction extends BaseAction<OperationInterface>{
 	private Integer opType;
 	
 	
-	//展示操作接口列表按Type
+	//灞曠ず鎿嶄綔鎺ュ彛鍒楄〃鎸塗ype
 	public String listOp(){
 		Integer opId = 0;
 		switch (opType) {

@@ -17,7 +17,7 @@ import com.dcits.business.user.bean.OperationInterface;
 import com.dcits.business.user.service.OperationInterfaceService;
 
 /**
- * ³õÊ¼»¯Web²Ù×÷-¼ÓÔØµ±Ç°²Ù×÷½Ó¿ÚÁĞ±í¡¢¼ÓÔØÍøÕ¾È«¾ÖÉèÖÃ
+ * åˆå§‹åŒ–Webæ“ä½œ-åŠ è½½å½“å‰æ“ä½œæ¥å£åˆ—è¡¨ã€åŠ è½½ç½‘ç«™å…¨å±€è®¾ç½®
  * @author Administrator
  *
  */
@@ -32,20 +32,20 @@ public class InitWebListener implements ServletContextListener{
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		ServletContext context = arg0.getServletContext();
-		  //È¡µÃapplictionÉÏÏÂÎÄ
+		  //å–å¾—applictionä¸Šä¸‹æ–‡
 		ApplicationContext ctx =WebApplicationContextUtils.
 		getRequiredWebApplicationContext(context);
-		  //È¡µÃÌØ¶¨bean
+		  //å–å¾—ç‰¹å®šbean
 		OperationInterfaceService opService =(OperationInterfaceService)ctx.getBean("operationInterfaceService");
 		GlobalSettingService settingService = (GlobalSettingService) ctx.getBean("globalSettingService");
-		//»ñÈ¡µ±Ç°ÏµÍ³µÄËùÓĞ½Ó¿ÚĞÅÏ¢  
+		//è·å–å½“å‰ç³»ç»Ÿçš„æ‰€æœ‰æ¥å£ä¿¡æ¯  
 		List<OperationInterface> ops = opService.findAll();
 		for(OperationInterface op:ops){
 			op.setParentOpId();
 		}
 		context.setAttribute("ops", ops);
 		
-		//»ñÈ¡ÍøÕ¾È«¾ÖÉèÖÃĞÅÏ¢
+		//è·å–ç½‘ç«™å…¨å±€è®¾ç½®ä¿¡æ¯
 		List<GlobalSetting> settings = settingService.findAll();
 		Map<String,GlobalSetting> globalSettingMap = new HashMap<String,GlobalSetting>();
 		for(GlobalSetting g:settings){

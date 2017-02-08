@@ -16,35 +16,35 @@ import com.dcits.business.system.bean.GlobalSetting;
 import com.opensymphony.xwork2.ActionContext;
 
 /**
- * struts2 ¹¤¾ßÀà
+ * struts2 å·¥å…·ç±»
  * @author Administrator
  *
  */
 public class StrutsUtils{
 	@SuppressWarnings("unchecked")
 	/*
-	 * »ñÈ¡requestMap
+	 * è·å–requestMap
 	 */
 	public static Map<String,Object> getRequestMap(){
 		return (Map<String, Object>)ActionContext.getContext().get("request");
 	}
 	
 	/*
-	 * »ñÈ¡sessionMap
+	 * è·å–sessionMap
 	 */
 	public static Map<String,Object> getSessionMap(){
 		return ActionContext.getContext().getSession();
 	}
 	
 	/*
-	 * »ñÈ¡applicationMap
+	 * è·å–applicationMap
 	 */
 	public static Map<String,Object> getApplicationMap(){
 		return ActionContext.getContext().getApplication();
 	}
 	
 	/*
-	 * »ñÈ¡parameterMap
+	 * è·å–parameterMap
 	 */
 	public static Map<String,Object> getParametersMap(){
 		//((String[])parameters.get("name"))[0]
@@ -52,20 +52,20 @@ public class StrutsUtils{
 	}
 	
 	/*
-	 * »ñÈ¡DT·¢ËÍµÄ²ÎÊı
+	 * è·å–DTå‘é€çš„å‚æ•°
 	 * 
 	 */
 	public static Map<String,Object> getDTParameters(){
 		Map<String,Object> returnMap = new HashMap<String,Object>();		
-		//ÅÅĞòµÄÄÇÒ»ÁĞÎ»ÖÃ
+		//æ’åºçš„é‚£ä¸€åˆ—ä½ç½®
 		String orderColumnNum = ServletActionContext.getRequest().getParameter("order[0][column]");
-		//ÅÅĞò·½Ê½ asc»òÕßdesc
+		//æ’åºæ–¹å¼ ascæˆ–è€…desc
 		String orderType = ServletActionContext.getRequest().getParameter("order[0][dir]");
-		//È«¾ÖËÑË÷Ìõ¼ş
+		//å…¨å±€æœç´¢æ¡ä»¶
 		String searchValue = ServletActionContext.getRequest().getParameter("search[value]");
-		//ĞèÒªÅÅĞòµÄÄÇÒ»ÁĞÊôĞÔÃû³Æ
+		//éœ€è¦æ’åºçš„é‚£ä¸€åˆ—å±æ€§åç§°
 		String orderDataName = ServletActionContext.getRequest().getParameter("columns["+orderColumnNum+"][data]");
-		//»ñÈ¡µ±Ç°ËùÓĞµÄÕ¹Ê¾×Ö¶Î
+		//è·å–å½“å‰æ‰€æœ‰çš„å±•ç¤ºå­—æ®µ
 		Map<String, String[]> params = ServletActionContext.getRequest().getParameterMap();
 		List<String> dataParams = new ArrayList<String>();
 		for(Map.Entry<String, String[]> entry:params.entrySet()){
@@ -84,14 +84,14 @@ public class StrutsUtils{
 	}
 	
 	/*
-	 * »ñÈ¡actionName
+	 * è·å–actionName
 	 */
 	public static String getActionName(){
 		return ActionContext.getContext().getName();
 	}
 	
 	/*
-	 * »ñÈ¡springÉÏÏÂÎÄ
+	 * è·å–springä¸Šä¸‹æ–‡
 	 * 
 	 */
 	public static ApplicationContext getApplicationContext(){
@@ -101,7 +101,7 @@ public class StrutsUtils{
 	}
 	
 	/*
-	 * »ñÈ¡È«¾ÖÉèÖÃÏî
+	 * è·å–å…¨å±€è®¾ç½®é¡¹
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
@@ -117,7 +117,7 @@ public class StrutsUtils{
 	}
 	
 	/*
-	 * »ñÈ¡ÏîÄ¿¸ùÂ·¾¶
+	 * è·å–é¡¹ç›®æ ¹è·¯å¾„
 	 * 
 	 */
 	public static String getProjectPath(){

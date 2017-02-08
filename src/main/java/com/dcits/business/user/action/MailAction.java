@@ -31,7 +31,7 @@ public class MailAction extends BaseAction<Mail>{
 	
 	private Integer receiveUserId;
 	
-	//»ñÈ¡Î´¶ÁÓÊ¼şÊıÁ¿
+	//è·å–æœªè¯»é‚®ä»¶æ•°é‡
 	public String getNoReadMailNum(){
 		User user = (User) StrutsUtils.getSessionMap().get("user");
 		int num = mailService.getNoReadNum(user.getUserId());
@@ -40,8 +40,8 @@ public class MailAction extends BaseAction<Mail>{
 		return SUCCESS;
 	}
 	
-	//»ñÈ¡ÊÕ¼şÏäÁĞ±í»òÕß·¢¼şÏäÁĞ±í
-	//mailType=1ÊÕ¼şÏäÁĞ±í   mailType=2 ·¢¼şÏäÁĞ±í
+	//è·å–æ”¶ä»¶ç®±åˆ—è¡¨æˆ–è€…å‘ä»¶ç®±åˆ—è¡¨
+	//mailType=1æ”¶ä»¶ç®±åˆ—è¡¨   mailType=2 å‘ä»¶ç®±åˆ—è¡¨
 	public String listMails(){
 		User user = (User) StrutsUtils.getSessionMap().get("user");
 		List<Mail> mails = new ArrayList<Mail>();
@@ -62,14 +62,14 @@ public class MailAction extends BaseAction<Mail>{
 		return SUCCESS;
 	}
 	
-	//¸Ä±äÓÊ¼ş×´Ì¬
+	//æ”¹å˜é‚®ä»¶çŠ¶æ€
 	public String changeStatus(){
 		if(statusName.equals("sendStatus")||statusName.equals("readStatus")||statusName.equals("ifValidate")){			
 			if(statusName.equals("sendStatus")){
 				Mail mail1 = mailService.get(model.getMailId());
 				if(mail1.getReceiveUser()==null){
 					jsonMap.put("returnCode", 3);
-					jsonMap.put("msg", "ĞèÒªÑ¡¶¨Ò»¸öÊÕ¼şÓÃ»§²ÅÄÜ·¢ËÍ!");
+					jsonMap.put("msg", "éœ€è¦é€‰å®šä¸€ä¸ªæ”¶ä»¶ç”¨æˆ·æ‰èƒ½å‘é€!");
 					return SUCCESS;
 				}
 				mail1.setSendTime(new Timestamp(System.currentTimeMillis()));
@@ -79,12 +79,12 @@ public class MailAction extends BaseAction<Mail>{
 			jsonMap.put("returnCode", 0);
 		}else{
 			jsonMap.put("returnCode", 2);
-			jsonMap.put("msg", "²ÎÊı²»ÕıÈ·!");
+			jsonMap.put("msg", "å‚æ•°ä¸æ­£ç¡®!");
 		}		
 		return SUCCESS;
 	}
 	
-	//»ñÈ¡Ö¸¶¨mail
+	//è·å–æŒ‡å®šmail
 	public String get(){
 		model = mailService.get(model.getMailId());
 		model.setReceiveUserName();
@@ -97,15 +97,15 @@ public class MailAction extends BaseAction<Mail>{
 		return SUCCESS;
 	}
 	
-	//É¾³ı
-	//Ä¿Ç°Ö»ÄÜÉ¾³ıÎ´·¢ËÍµÄÓÊ¼ş
+	//åˆ é™¤
+	//ç›®å‰åªèƒ½åˆ é™¤æœªå‘é€çš„é‚®ä»¶
 	public String del(){
 		mailService.delete(model.getMailId());
 		jsonMap.put("returnCode", 0);
 		return SUCCESS;
 	}
 
-	//±£´æĞÂµÄÓÊ¼şĞÅÏ¢»òÕß¸üĞÂĞÅÏ¢
+	//ä¿å­˜æ–°çš„é‚®ä»¶ä¿¡æ¯æˆ–è€…æ›´æ–°ä¿¡æ¯
 	public String save(){
 		User user = (User) StrutsUtils.getSessionMap().get("user");
 		

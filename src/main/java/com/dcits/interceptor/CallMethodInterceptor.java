@@ -14,7 +14,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 /**
- * Ã¿¸öÓÃ»§µ÷ÓÃÈÎºÎÒ»¸ö²Ù×÷½Ó¿Ú¶¼±ØĞë¾­¹ı±¾À¹½ØÆ÷
+ * æ¯ä¸ªç”¨æˆ·è°ƒç”¨ä»»ä½•ä¸€ä¸ªæ“ä½œæ¥å£éƒ½å¿…é¡»ç»è¿‡æœ¬æ‹¦æˆªå™¨
  * 
  * @author xwc
  *
@@ -38,12 +38,12 @@ public class CallMethodInterceptor extends ActionSupport implements Interceptor 
 	@Override
 	public String intercept(ActionInvocation arg0) throws Exception {
 		String timeTag = String.valueOf(System.currentTimeMillis());
-		//ÇëÇó½Ó¿ÚÂ·¾¶
+		//è¯·æ±‚æ¥å£è·¯å¾„
 		String actionName = arg0.getProxy().getActionName();
-		//µ±Ç°ËùÓĞ½Ó¿ÚĞÅÏ¢
+		//å½“å‰æ‰€æœ‰æ¥å£ä¿¡æ¯
 		List<OperationInterface> ops = (List<OperationInterface>) StrutsUtils.getApplicationMap().get("ops");
-		logger.info("["+timeTag+"]"+"¿ªÊ¼µ÷ÓÃ½Ó¿Ú:"+actionName+",½øĞĞÈ¨ÏŞÑéÖ¤!");
-		//ÅĞ¶Ï¸Ã½Ó¿ÚÊÇ·ñÎªÍ¨ÓÃ½Ó¿Ú(²»´æÔÚÓë½Ó¿ÚÁĞ±íÖĞ¼´ÈÏÎªÊÇÍ¨ÓÃ½Ó¿Ú,²»ĞèÒªÈÎºÎÑéÖ¤¾Í¿ÉÒÔµ÷ÓÃ)
+		logger.info("["+timeTag+"]"+"å¼€å§‹è°ƒç”¨æ¥å£:"+actionName+",è¿›è¡Œæƒé™éªŒè¯!");
+		//åˆ¤æ–­è¯¥æ¥å£æ˜¯å¦ä¸ºé€šç”¨æ¥å£(ä¸å­˜åœ¨ä¸æ¥å£åˆ—è¡¨ä¸­å³è®¤ä¸ºæ˜¯é€šç”¨æ¥å£,ä¸éœ€è¦ä»»ä½•éªŒè¯å°±å¯ä»¥è°ƒç”¨)
 		int isCommon = 0;
 		OperationInterface currOp = null;
 		for(OperationInterface op:ops){
@@ -54,27 +54,27 @@ public class CallMethodInterceptor extends ActionSupport implements Interceptor 
 			}
 		}
 		if(isCommon==0){
-			logger.info("["+timeTag+"]"+"½Ó¿Ú"+actionName+"Î´ÔÚ½Ó¿ÚÁĞ±í¶¨Òå,ÎªÍ¨ÓÃ½Ó¿Ú,ÇëÇó·ÅĞĞ!");
+			logger.info("["+timeTag+"]"+"æ¥å£"+actionName+"æœªåœ¨æ¥å£åˆ—è¡¨å®šä¹‰,ä¸ºé€šç”¨æ¥å£,è¯·æ±‚æ”¾è¡Œ!");
 			return arg0.invoke();
 		}
 		
 		
-		//ÅĞ¶ÏÓÃ»§ÊÇ·ñµÇÂ¼
-		//»ñÈ¡µ±Ç°µÇÂ¼ÓÃ»§
+		//åˆ¤æ–­ç”¨æˆ·æ˜¯å¦ç™»å½•
+		//è·å–å½“å‰ç™»å½•ç”¨æˆ·
 		User user = (User) StrutsUtils.getSessionMap().get("user");
 		if(user==null){
-			logger.info("["+timeTag+"]"+"ÓÃ»§Î´µÇÂ¼,µ÷ÓÃ½Ó¿Ú"+actionName+"Ê§°Ü!");
+			logger.info("["+timeTag+"]"+"ç”¨æˆ·æœªç™»å½•,è°ƒç”¨æ¥å£"+actionName+"å¤±è´¥!");
 			return "usernotlogin";
 		}
-		String userTag = "["+"ÓÃ»§Ãû:"+user.getUsername()+",ID="+user.getUserId()+"]";
-		//ÅĞ¶Ï¸Ã½Ó¿ÚÊÇ·ñÕı³£¿Éµ÷ÓÃ
+		String userTag = "["+"ç”¨æˆ·å:"+user.getUsername()+",ID="+user.getUserId()+"]";
+		//åˆ¤æ–­è¯¥æ¥å£æ˜¯å¦æ­£å¸¸å¯è°ƒç”¨
 		if(!currOp.getStatus().equals("0")){
-			logger.info("["+timeTag+"]"+userTag+"µ±Ç°½Ó¿Ú"+actionName+"ÒÑ±»½ûÓÃ!");
+			logger.info("["+timeTag+"]"+userTag+"å½“å‰æ¥å£"+actionName+"å·²è¢«ç¦ç”¨!");
 			return "opisdisable";
 		}
 		
-		//ÅĞ¶Ïµ±Ç°ÓÃ»§ÊÇ·ñÓµÓĞµ÷ÓÃÈ¨ÏŞ
-		//»ñÈ¡µÇÂ¼ÓÃ»§ËùÊô½ÇÉ«µÄÈ¨ÏŞĞÅÏ¢
+		//åˆ¤æ–­å½“å‰ç”¨æˆ·æ˜¯å¦æ‹¥æœ‰è°ƒç”¨æƒé™
+		//è·å–ç™»å½•ç”¨æˆ·æ‰€å±è§’è‰²çš„æƒé™ä¿¡æ¯
 		Set<OperationInterface> ops1 = user.getRole().getOis();
 		int isPrivilege = 1;
 		for(OperationInterface op:ops1){
@@ -85,11 +85,11 @@ public class CallMethodInterceptor extends ActionSupport implements Interceptor 
 		}
 		
 		if(isPrivilege==1){
-			logger.info("["+timeTag+"]"+userTag+"ÓÃ»§Ã»ÓĞµ÷ÓÃ½Ó¿Ú"+actionName+"µÄÈ¨ÏŞ,µ÷ÓÃÊ§°Ü!");
+			logger.info("["+timeTag+"]"+userTag+"ç”¨æˆ·æ²¡æœ‰è°ƒç”¨æ¥å£"+actionName+"çš„æƒé™,è°ƒç”¨å¤±è´¥!");
 			return "usernotpower";
 		}
 		
-		logger.info("["+timeTag+"]"+userTag+"µ±Ç°½Ó¿Ú"+actionName+"È¨ÏŞÑéÖ¤Í¨¹ı!");
+		logger.info("["+timeTag+"]"+userTag+"å½“å‰æ¥å£"+actionName+"æƒé™éªŒè¯é€šè¿‡!");
 		return arg0.invoke();
 
 	}

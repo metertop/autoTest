@@ -29,7 +29,7 @@ public class UserAction extends BaseAction<User>{
 
 	private static Logger logger = Logger.getLogger(UserAction.class);
 	
-	//ÓÃ»§µÇÂ½
+	//ç”¨æˆ·ç™»é™†
 	public String toLogin(){
 	
 		model = userService.login(model.getUsername(), MD5Util.code(model.getPassword()));
@@ -39,25 +39,25 @@ public class UserAction extends BaseAction<User>{
 		if(model!=null){
 			if(user!=null&&user.getUserId()==model.getUserId()){
 				jsonMap.put("returnCode", 4);
-				jsonMap.put("msg", "ÄãÒÑµÇÂ¼¸ÃÕËºÅ,ÇëÇĞ»»ÖÁ²»Í¬µÄÕËºÅ!");
+				jsonMap.put("msg", "ä½ å·²ç™»å½•è¯¥è´¦å·,è¯·åˆ‡æ¢è‡³ä¸åŒçš„è´¦å·!");
 				return SUCCESS;
 			}
 			if(model.getStatus().equals("0")){
 				returnCode=0;
 				msg="";
-				//½«ÓÃ»§ĞÅÏ¢·ÅÈësessionÖĞ
+				//å°†ç”¨æˆ·ä¿¡æ¯æ”¾å…¥sessionä¸­
 				StrutsUtils.getSessionMap().put("user", model);			
 				model.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
 				userService.edit(model);
-				logger.info("ÓÃ»§"+model.getRealName()+"[ID="+model.getUserId()+"]"+"µÇÂ¼³É¹¦!");
+				logger.info("ç”¨æˆ·"+model.getRealName()+"[ID="+model.getUserId()+"]"+"ç™»å½•æˆåŠŸ!");
 			}else{
 				returnCode=2;
-				msg="ÄãµÄÕËºÅÒÑ±»Ëø¶¨,ÇëÁªÏµ¹ÜÀíÔ±½øĞĞ½âËø¡£";
+				msg="ä½ çš„è´¦å·å·²è¢«é”å®š,è¯·è”ç³»ç®¡ç†å‘˜è¿›è¡Œè§£é”ã€‚";
 			}
 			
 		}else{
 			returnCode=1;
-			msg="ÕËºÅ»òÃÜÂë²»ÕıÈ·,ÇëÖØĞÂÊäÈë!";
+			msg="è´¦å·æˆ–å¯†ç ä¸æ­£ç¡®,è¯·é‡æ–°è¾“å…¥!";
 		}
 		jsonMap.put("returnCode", returnCode);
 		jsonMap.put("msg", msg);
@@ -65,16 +65,16 @@ public class UserAction extends BaseAction<User>{
 		
 	}
 	
-	//ÓÃ»§µÇ³ö
+	//ç”¨æˆ·ç™»å‡º
 	@SuppressWarnings("rawtypes")
 	public String logout(){
-		logger.info("ÓÃ»§"+((User)StrutsUtils.getSessionMap().get("user")).getRealName()+"ÒÑµÇ³ö!");
+		logger.info("ç”¨æˆ·"+((User)StrutsUtils.getSessionMap().get("user")).getRealName()+"å·²ç™»å‡º!");
 		((SessionMap)StrutsUtils.getSessionMap()).invalidate();
 		jsonMap.put("returnCode", 0);			
 		return SUCCESS;
 	}
 	
-	//ÅĞ¶ÏÓÃ»§ÊÇ·ñµÇÂ½
+	//åˆ¤æ–­ç”¨æˆ·æ˜¯å¦ç™»é™†
 	public String judgeLogin(){
 		User user=(User)StrutsUtils.getSessionMap().get("user");
 		if(user!=null){
@@ -86,7 +86,7 @@ public class UserAction extends BaseAction<User>{
 
 	}
 	
-	//»ñÈ¡ÒÑµÇÂ¼ÔÚÏßÓÃ»§µÄ»ù±¾ĞÅÏ¢
+	//è·å–å·²ç™»å½•åœ¨çº¿ç”¨æˆ·çš„åŸºæœ¬ä¿¡æ¯
 	public String getLoginUserInfo(){
 		
 		User user=(User)StrutsUtils.getSessionMap().get("user");		
@@ -100,7 +100,7 @@ public class UserAction extends BaseAction<User>{
 		return SUCCESS;
 	}
 	
-	//µÇÂ¼ÓÃ»§ĞŞ¸Ä×Ô¼ºµÄÕæÊµĞÕÃû
+	//ç™»å½•ç”¨æˆ·ä¿®æ”¹è‡ªå·±çš„çœŸå®å§“å
 	public String editMyName(){
 		User user = (User)StrutsUtils.getSessionMap().get("user");		
 		userService.updateRealName(model.getRealName(), user.getUserId());
@@ -109,19 +109,19 @@ public class UserAction extends BaseAction<User>{
 		return SUCCESS;
 	}
 	
-	//ÑéÖ¤µ±Ç°ÃÜÂë
+	//éªŒè¯å½“å‰å¯†ç 
 	public String verifyPasswd(){
 		User user=(User)StrutsUtils.getSessionMap().get("user");
 		if(user.getPassword().equals(MD5Util.code(model.getPassword()))){
 			jsonMap.put("returnCode", 0);			
 		}else{
 			jsonMap.put("returnCode", 2);
-			jsonMap.put("msg", "ÃÜÂëÑéÖ¤Ê§°Ü!");
+			jsonMap.put("msg", "å¯†ç éªŒè¯å¤±è´¥!");
 		}		
 		return SUCCESS;
 	}
 
-	//ĞŞ¸ÄÃÜÂë
+	//ä¿®æ”¹å¯†ç 
 	public String modifyPasswd(){
 		User user=(User)StrutsUtils.getSessionMap().get("user");
 		userService.resetPasswd(user.getUserId(), MD5Util.code(model.getPassword()));
@@ -130,12 +130,12 @@ public class UserAction extends BaseAction<User>{
 		return SUCCESS;
 	}
 	
-	//É¾³ıÖ¸¶¨ÓÃ»§
+	//åˆ é™¤æŒ‡å®šç”¨æˆ·
 	@Override
 	public String del(){
 		if(userService.get(id).getUsername().equals("admin")){
 			jsonMap.put("returnCode", 2);
-			jsonMap.put("msg", "²»ÄÜÉ¾³ıÔ¤ÖÃ¹ÜÀíÔ±ÓÃ»§!");
+			jsonMap.put("msg", "ä¸èƒ½åˆ é™¤é¢„ç½®ç®¡ç†å‘˜ç”¨æˆ·!");
 			return SUCCESS;
 		}
 		userService.delete(id);
@@ -143,11 +143,11 @@ public class UserAction extends BaseAction<User>{
 		return SUCCESS;
 	}
 	
-	//Ëø¶¨»òÕß½âËøÓÃ»§
+	//é”å®šæˆ–è€…è§£é”ç”¨æˆ·
 	public String lock(){
 		if(model.getUsername().equals("admin")){
 			jsonMap.put("returnCode", 2);
-			jsonMap.put("msg", "²»ÄÜËø¶¨Ô¤ÖÃ¹ÜÀíÔ±ÓÃ»§!");
+			jsonMap.put("msg", "ä¸èƒ½é”å®šé¢„ç½®ç®¡ç†å‘˜ç”¨æˆ·!");
 			return SUCCESS;
 		}
 		userService.lockUser(model.getUserId(), mode);
@@ -156,7 +156,7 @@ public class UserAction extends BaseAction<User>{
 		
 	}
 	
-	//ÖØÖÃÃÜÂë
+	//é‡ç½®å¯†ç 
 	public String resetPwd(){
 		userService.resetPasswd(model.getUserId(),MD5Util.code("111111"));
 		jsonMap.put("returnCode", 0);
@@ -164,27 +164,27 @@ public class UserAction extends BaseAction<User>{
 	}
 	
 	
-	//ÓÃ»§±à¼­
+	//ç”¨æˆ·ç¼–è¾‘
 	@Override
 	public String edit(){
 		User u1 = userService.validateUsername(model.getUsername(),model.getUserId());
 		if(u1!=null){
 			jsonMap.put("returnCode", 2);
-			jsonMap.put("msg", "ÓÃ»§ÃûÒÑ´æÔÚ!");
+			jsonMap.put("msg", "ç”¨æˆ·åå·²å­˜åœ¨!");
 			return SUCCESS;
 		}
 		Role r = new Role();
 		r.setRoleId(roleId);
 		model.setRole(r);
 		if(model.getUserId()==null){
-			//ĞÂÔö
+			//æ–°å¢
 			model.setIfNew("1");
 			model.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			model.setPassword(MD5Util.code("111111"));
 			model.setStatus("0");
 			model.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
 		}else{
-			//ĞŞ¸Ä
+			//ä¿®æ”¹
 			User u2 = userService.get(model.getUserId());
 			model.setIfNew(u2.getIfNew());
 			model.setPassword(u2.getPassword());			
@@ -195,12 +195,12 @@ public class UserAction extends BaseAction<User>{
 	}
 	
 	
-	//Ìõ¼ş²éÑ¯
+	//æ¡ä»¶æŸ¥è¯¢
 	public String filter(){
 		List<User> users = userService.findByRealName(model.getRealName());
 		if(users.size()==0){
 			jsonMap.put("returnCode", 2);
-			jsonMap.put("msg", "Ã»ÓĞ²éÑ¯µ½Ö¸¶¨µÄÓÃ»§");
+			jsonMap.put("msg", "æ²¡æœ‰æŸ¥è¯¢åˆ°æŒ‡å®šçš„ç”¨æˆ·");
 		}else{
 			jsonMap.put("returnCode", 0);		
 		}
@@ -208,13 +208,13 @@ public class UserAction extends BaseAction<User>{
 		return SUCCESS;
 	}
 	
-	//²âÊÔ
+	//æµ‹è¯•
 	/*public String quartzTest(){
 		HttpServletRequest request = ServletActionContext.getRequest();
 		ServletContext sc=request.getSession().getServletContext();
 		ApplicationContext ac = WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
 		JobManager obj = (JobManager) ac.getBean("jobManager");
-		AutoTask task = new AutoTask("²âÊÔ", "0", 0, "0 4 19 * * ?", 0, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), "0");
+		AutoTask task = new AutoTask("æµ‹è¯•", "0", 0, "0 4 19 * * ?", 0, new Timestamp(System.currentTimeMillis()), new Timestamp(System.currentTimeMillis()), "0");
     	task.setTaskId(1);
 		try {
 			obj.stopTask(task);

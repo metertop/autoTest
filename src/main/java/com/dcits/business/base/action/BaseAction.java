@@ -23,7 +23,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 /**
- * Í¨ÓÃActionÀà
+ * é€šç”¨Actionç±»
  * @author dcits
  *
  * @param <T>
@@ -35,7 +35,7 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	
 	protected BaseService<T> baseService;
 	
-	//ajaxµ÷ÓÃ·µ»ØµÄmap
+	//ajaxè°ƒç”¨è¿”å›çš„map
 	protected Map<String,Object> jsonMap=new HashMap<String,Object>();
 
 	protected Class clazz;
@@ -44,12 +44,12 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	
 	protected Integer id;
 		
-	//dataTable·şÎñÆ÷´¦Àí²ÎÊı
-	//ÇëÇó¼ÆÊı±£Ö¤²»»ìÏıÇ°ºóÇëÇóÕ¹Ê¾µÄÊı¾İË³Ğò
+	//dataTableæœåŠ¡å™¨å¤„ç†å‚æ•°
+	//è¯·æ±‚è®¡æ•°ä¿è¯ä¸æ··æ·†å‰åè¯·æ±‚å±•ç¤ºçš„æ•°æ®é¡ºåº
 	protected Integer draw;
-	//ÇëÇóÊı¾İ¿ªÊ¼ÏÂ±ê
+	//è¯·æ±‚æ•°æ®å¼€å§‹ä¸‹æ ‡
 	protected Integer start;
-	//±¾´ÎÇëÇóµÄÊı¾İ³¤¶È
+	//æœ¬æ¬¡è¯·æ±‚çš„æ•°æ®é•¿åº¦
 	protected Integer length;
 	
 	@Autowired
@@ -65,8 +65,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	
 	
 	/**
-	 * Í¨ÓÃ list·½·¨
-	 * ·ÖÒ³Õ¹Ê¾¶ÔÓ¦ÊµÌåµÄ¼¯ºÏ
+	 * é€šç”¨ listæ–¹æ³•
+	 * åˆ†é¡µå±•ç¤ºå¯¹åº”å®ä½“çš„é›†åˆ
 	 * @return
 	 */
 	public String list(){
@@ -85,8 +85,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	}
 	
 	/**
-	 * Í¨ÓÃ·½·¨ listAll
-	 * »ñÈ¡ËùÓĞµÄ¶ÔÓ¦ÊµÌå¼¯ºÏ
+	 * é€šç”¨æ–¹æ³• listAll
+	 * è·å–æ‰€æœ‰çš„å¯¹åº”å®ä½“é›†åˆ
 	 * @return
 	 */
 	public String listAll(){
@@ -98,8 +98,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	
 	
 	/**
-	 * Í¨ÓÃ·½·¨ del
-	 * ¸ù¾İ´«ÈëµÄidÉ¾³ı¶ÔÓ¦ÊµÌå
+	 * é€šç”¨æ–¹æ³• del
+	 * æ ¹æ®ä¼ å…¥çš„idåˆ é™¤å¯¹åº”å®ä½“
 	 * @return
 	 */
 	public String del(){
@@ -109,8 +109,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	}
 	
 	/**
-	 * Í¨ÓÃ·½·¨ get
-	 * ¸ù¾İid»ñÈ¡Ö¸¶¨ÊµÌåĞÅÏ¢
+	 * é€šç”¨æ–¹æ³• get
+	 * æ ¹æ®idè·å–æŒ‡å®šå®ä½“ä¿¡æ¯
 	 * @return
 	 */
 	public String get(){
@@ -120,8 +120,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	}
 	
 	/**
-	 * Í¨ÓÃ·½·¨ edit
-	 * ±à¼­ÊµÌå ÈçÊ¹ÓÃ¸¸ÀàÖĞ´Ë·½·¨ ±£Ö¤´ÓÇ°Ì¨´«ÈëµÄÊôĞÔÊÇÍêÕûµÄ£¬·ñÔòÇëÔÚ×ÓÀàÖĞÖØĞ´¸Ã·½·¨
+	 * é€šç”¨æ–¹æ³• edit
+	 * ç¼–è¾‘å®ä½“ å¦‚ä½¿ç”¨çˆ¶ç±»ä¸­æ­¤æ–¹æ³• ä¿è¯ä»å‰å°ä¼ å…¥çš„å±æ€§æ˜¯å®Œæ•´çš„ï¼Œå¦åˆ™è¯·åœ¨å­ç±»ä¸­é‡å†™è¯¥æ–¹æ³•
 	 * @return
 	 */
 	public String edit(){
@@ -131,8 +131,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	}
 	
 	/**
-	 * Í¨ÓÃ·½·¨ save
-	 * ±£Ö¤ĞÂµÄÊµÌå¶ÔÏó  Í¬edit() ±£Ö¤´«ÈëµÄÊôĞÔÊÇÍêÕûµÄ  ·ñÔòÇëÔÚ×ÓÀàÖĞÖØĞ´¸Ã·½·¨
+	 * é€šç”¨æ–¹æ³• save
+	 * ä¿è¯æ–°çš„å®ä½“å¯¹è±¡  åŒedit() ä¿è¯ä¼ å…¥çš„å±æ€§æ˜¯å®Œæ•´çš„  å¦åˆ™è¯·åœ¨å­ç±»ä¸­é‡å†™è¯¥æ–¹æ³•
 	 * @return
 	 */
 	public String save(){
@@ -142,7 +142,7 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	}
 	
 	/**
-	 * Í¨¹ı·´Éä¶¯Ì¬µÄ´´½¨¶ÔÏó
+	 * é€šè¿‡åå°„åŠ¨æ€çš„åˆ›å»ºå¯¹è±¡
 	 */
 	public BaseAction() {
 		ParameterizedType type = (ParameterizedType) this.getClass()
@@ -156,15 +156,15 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	}
 	
 	/**
-	 * ³õÊ¼»¯½«baseService Ìæ»»ÎªÖ¸¶¨µÄ***Service
-	 * ¾ßÌåËµÃ÷²Î¿¼BaserServiceImplÖĞµÄinit·½·¨
+	 * åˆå§‹åŒ–å°†baseService æ›¿æ¢ä¸ºæŒ‡å®šçš„***Service
+	 * å…·ä½“è¯´æ˜å‚è€ƒBaserServiceImplä¸­çš„initæ–¹æ³•
 	 * @throws Exception
 	 */
 	@PostConstruct
 	public void init() throws Exception
 	{
 		String clazzName = clazz.getSimpleName();
-		String clazzServiceName = clazzName.substring(0,1).toLowerCase() + clazzName.substring(1) + "Service";//toLowerCaseÊ××ÖÄ¸Ğ¡Ğ´
+		String clazzServiceName = clazzName.substring(0,1).toLowerCase() + clazzName.substring(1) + "Service";//toLowerCaseé¦–å­—æ¯å°å†™
 		Field serviceNameField = this.getClass().getSuperclass().getDeclaredField(clazzServiceName);
 		Object object = serviceNameField.get(this);
 		Field baseServiceNameField = this.getClass().getSuperclass().getDeclaredField("baseService");

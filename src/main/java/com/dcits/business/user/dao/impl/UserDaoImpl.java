@@ -12,21 +12,21 @@ import com.dcits.business.user.dao.UserDao;
 @Repository("userDao")
 public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao{
 	/**
-	 * Æ¥Åä½øĞĞµÇÂ½µÄÓÃ»§
+	 * åŒ¹é…è¿›è¡Œç™»é™†çš„ç”¨æˆ·
 	 * @param userName
 	 * @param passWord
 	 * @return
 	 */
 	@Override
 	public User login(String userName,String passWord){
-		// ´´½¨HQLÓï¾ä
+		// åˆ›å»ºHQLè¯­å¥
 		Query query = getSession()
 				.createQuery(
 						"from User u where u.username=:userName and u.password=:passWord");
-		// ÉèÖÃHQLÓï¾äÖĞµÄ²ÎÊı
+		// è®¾ç½®HQLè¯­å¥ä¸­çš„å‚æ•°
 		query.setString("userName", userName);
 		query.setString("passWord", passWord);
-		// Ö´ĞĞHQLÓï¾ä
+		// æ‰§è¡ŒHQLè¯­å¥
 		return (User) query.uniqueResult();
 	}
 	

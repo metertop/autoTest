@@ -10,7 +10,7 @@ import com.dcits.business.system.service.GlobalSettingService;
 public class GlobalSettingServiceImpl extends BaseServiceImpl<GlobalSetting> implements GlobalSettingService{
 	
 	/**
-	 * ¸üĞÂµ¥¸öÈ«¾ÖÉèÖÃÏî
+	 * æ›´æ–°å•ä¸ªå…¨å±€è®¾ç½®é¡¹
 	 * @param settingName
 	 * @param settingValue
 	 */

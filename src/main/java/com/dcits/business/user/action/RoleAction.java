@@ -26,7 +26,7 @@ public class RoleAction extends BaseAction<Role>{
 	private String addOpIds;
 	
 	
-	//Õ¹Ê¾µ±Ç°µÄËùÓĞµÄ½ÇÉ«
+	//å±•ç¤ºå½“å‰çš„æ‰€æœ‰çš„è§’è‰²
 	@Override
 	public String listAll(){
 		List<Role> roles=roleService.findAll();
@@ -38,22 +38,22 @@ public class RoleAction extends BaseAction<Role>{
 		return SUCCESS;
 	}
 	
-	//É¾³ı½ÇÉ«,µ«ÊÇ²»ÄÜÉ¾³ıÔ¤ÖÃµÄ¹ÜÀíÔ±ÕË»§
+	//åˆ é™¤è§’è‰²,ä½†æ˜¯ä¸èƒ½åˆ é™¤é¢„ç½®çš„ç®¡ç†å‘˜è´¦æˆ·
 	public String del(){
 			Role role = roleService.get(model.getRoleId());
 			String roleName = role.getRoleName();
 			if(roleName.equals("admin")||roleName.equals("default")){
 				jsonMap.put("returnCode", 2);
-				jsonMap.put("msg", "²»ÄÜÉ¾³ı³¬¼¶¹ÜÀíÔ±½ÇÉ«»òÕßÄ¬ÈÏ½ÇÉ«");
+				jsonMap.put("msg", "ä¸èƒ½åˆ é™¤è¶…çº§ç®¡ç†å‘˜è§’è‰²æˆ–è€…é»˜è®¤è§’è‰²");
 				return SUCCESS;
 			}
 			roleService.delete(model.getRoleId());
-			//É¾³ıÆäËû½ÇÉ«,ÅäÖÃ¸Ã½ÇÉ«µÄÓÃ»§±ä¸ü³Édefault½ÇÉ«
+			//åˆ é™¤å…¶ä»–è§’è‰²,é…ç½®è¯¥è§’è‰²çš„ç”¨æˆ·å˜æ›´æˆdefaultè§’è‰²
 			jsonMap.put("returnCode", 0);
 		return SUCCESS;
 	}
 	
-	//¸ù¾İroleId²éÕÒÖ¸¶¨µÄroleĞÅÏ¢
+	//æ ¹æ®roleIdæŸ¥æ‰¾æŒ‡å®šçš„roleä¿¡æ¯
 	public String get(){
 		Role role = roleService.get(model.getRoleId());
 		jsonMap.put("role", role);
@@ -61,19 +61,19 @@ public class RoleAction extends BaseAction<Role>{
 		return SUCCESS;
 	}
 	
-	//±à¼­»òÕßĞÂÔöroleĞÅÏ¢
+	//ç¼–è¾‘æˆ–è€…æ–°å¢roleä¿¡æ¯
 	public String edit(){
-		//ÅĞ¶ÏroleNameµÄºÏ·¨ĞÔ:²»ÄÜÖØ¸´
+		//åˆ¤æ–­roleNameçš„åˆæ³•æ€§:ä¸èƒ½é‡å¤
 		Role r = roleService.get(model.getRoleName());
 		if(r!=null){
 			if((model.getRoleId()!=null&&r.getRoleId()!=model.getRoleId())||model.getRoleId()==null){
 				jsonMap.put("returnCode", 2);
-				jsonMap.put("msg", "¸Ã½ÇÉ«ÃûÒÑ´æÔÚ,Çë¸ü»»!");
+				jsonMap.put("msg", "è¯¥è§’è‰²åå·²å­˜åœ¨,è¯·æ›´æ¢!");
 				return SUCCESS;
 			}			
 		}
 		if(model.getRoleId()!=null){
-			//ĞŞ¸Ä
+			//ä¿®æ”¹
 			model.setOis(roleService.get(model.getRoleId()).getOis());
 		}
 		roleService.edit(model);		
@@ -81,8 +81,8 @@ public class RoleAction extends BaseAction<Role>{
 		return SUCCESS;
 	}
 	
-	//»ñÈ¡µ±Ç°ËùÓĞµÄ²Ù×÷½Ó¿ÚÁĞ±í
-	//²¢ÇÒ¶Ôµ±Ç°½ÇÉ«ÒÑÓµÓĞµÄ²Ù×÷½Ó¿Ú´ò±ê¼Ç
+	//è·å–å½“å‰æ‰€æœ‰çš„æ“ä½œæ¥å£åˆ—è¡¨
+	//å¹¶ä¸”å¯¹å½“å‰è§’è‰²å·²æ‹¥æœ‰çš„æ“ä½œæ¥å£æ‰“æ ‡è®°
 	@SuppressWarnings("unchecked")
 	public String getNodes(){		
 		List<OperationInterface> ops = (List<OperationInterface>) StrutsUtils.getApplicationMap().get("ops");				
@@ -103,12 +103,12 @@ public class RoleAction extends BaseAction<Role>{
 		return SUCCESS;
 	}
 	
-	//¸üĞÂ½ÇÉ«µÄÈ¨ÏŞĞÅÏ¢
-	//¸üĞÂ½ÇÉ«Óë²Ù×÷½Ó¿ÚµÄ¹ØÁª¹ØÏµ
+	//æ›´æ–°è§’è‰²çš„æƒé™ä¿¡æ¯
+	//æ›´æ–°è§’è‰²ä¸æ“ä½œæ¥å£çš„å…³è”å…³ç³»
 	public String updateRolePower(){
 		Role role = roleService.get(model.getRoleId());
 		Set<OperationInterface> ops = role.getOis();
-		//¸üĞÂÔö¼ÓµÄÈ¨ÏŞ
+		//æ›´æ–°å¢åŠ çš„æƒé™
 		if(addOpIds!=null&&!addOpIds.equals("")){
 			String[] addOpArray = addOpIds.split(",");
 			for(String s:addOpArray){
@@ -118,7 +118,7 @@ public class RoleAction extends BaseAction<Role>{
 			}
 			
 		}
-		//¸üĞÂÉ¾³ıµÄÈ¨ÏŞ
+		//æ›´æ–°åˆ é™¤çš„æƒé™
 		if(delOpIds!=null&&!delOpIds.equals("")){
 			String[] delOpArray = delOpIds.split(",");
 			for(String s:delOpArray){

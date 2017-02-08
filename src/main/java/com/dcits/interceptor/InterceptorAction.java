@@ -18,50 +18,50 @@ public class InterceptorAction extends ActionSupport{
 	private static final long serialVersionUID = 1L;
 	
 	private static Logger logger = Logger.getLogger(InterceptorAction.class);
-	//ajaxµ÷ÓÃ·µ»ØµÄmap
+	//ajaxè°ƒç”¨è¿”å›çš„map
 	private Map<String,Object> jsonMap=new HashMap<String,Object>();
 	
 		
 	public String noLogin(){
 		jsonMap.put("returnCode", 7);
-		jsonMap.put("msg", "Äã»¹Ã»ÓĞµÇÂ½»òÕßµÇÂ½ÒÑÊ§Ğ§,ÇëÖØĞÂµÇÂ½");
-		logger.info("ÓÃ»§Ã»ÓĞµÇÂ¼,ÇëÇó²»Í¨¹ı!");
+		jsonMap.put("msg", "ä½ è¿˜æ²¡æœ‰ç™»é™†æˆ–è€…ç™»é™†å·²å¤±æ•ˆ,è¯·é‡æ–°ç™»é™†");
+		logger.info("ç”¨æˆ·æ²¡æœ‰ç™»å½•,è¯·æ±‚ä¸é€šè¿‡!");
 		return SUCCESS;
 		
 	}
 		
 	public String noPower(){
 		jsonMap.put("returnCode", 8);
-		jsonMap.put("msg", "ÄãÃ»ÓĞÈ¨ÏŞ½øĞĞ´Ë²Ù×÷");
-		logger.info("ÓÃ»§È¨ÏŞ²»¹»,ÇëÇó²»Í¨¹ı!");
+		jsonMap.put("msg", "ä½ æ²¡æœ‰æƒé™è¿›è¡Œæ­¤æ“ä½œ");
+		logger.info("ç”¨æˆ·æƒé™ä¸å¤Ÿ,è¯·æ±‚ä¸é€šè¿‡!");
 		return SUCCESS;
 	}
 		
 	public String error(){
 		jsonMap.put("returnCode", 1);
-		jsonMap.put("msg", "ÏµÍ³ÄÚ²¿´íÎó,ÇëÉÔºóÔÙÊÔ");
+		jsonMap.put("msg", "ç³»ç»Ÿå†…éƒ¨é”™è¯¯,è¯·ç¨åå†è¯•");
 		logger.error(ActionContext.getContext().getValueStack().findValue("exception"));
-		logger.error("ÏµÍ³ÄÚ²¿´íÎó,ÇëÇóÊ§°Ü!");
+		logger.error("ç³»ç»Ÿå†…éƒ¨é”™è¯¯,è¯·æ±‚å¤±è´¥!");
 		return SUCCESS;
 	}
 	
 	public String opDisable(){
 		jsonMap.put("returnCode", 11);
-		jsonMap.put("msg", "¸Ã²Ù×÷½Ó¿ÚÒÑ±»ÉèÖÃ½ûÖ¹µ÷ÓÃ!");
-		logger.info("¸Ã²Ù×÷½Ó¿ÚÒÑ±»ÉèÖÃ½ûÖ¹µ÷ÓÃ!");
+		jsonMap.put("msg", "è¯¥æ“ä½œæ¥å£å·²è¢«è®¾ç½®ç¦æ­¢è°ƒç”¨!");
+		logger.info("è¯¥æ“ä½œæ¥å£å·²è¢«è®¾ç½®ç¦æ­¢è°ƒç”¨!");
 		return SUCCESS;
 	}
 	
 	public String opNotfound(){
 		jsonMap.put("returnCode", 13);
-		jsonMap.put("msg", "Î´¶¨ÒåµÄ²Ù×÷½Ó¿Ú");
-		logger.info("²»´æÔÚ¸Ã½Ó¿Ú!");
+		jsonMap.put("msg", "æœªå®šä¹‰çš„æ“ä½œæ¥å£");
+		logger.info("ä¸å­˜åœ¨è¯¥æ¥å£!");
 		return SUCCESS;
 	}
 	
 	public String scriptUpload(){
 		jsonMap.put("returnCode", 10);
-		jsonMap.put("msg", "ÎÄ¼şÉÏ´«³É¹¦!");
+		jsonMap.put("msg", "æ–‡ä»¶ä¸Šä¼ æˆåŠŸ!");
 		return SUCCESS;
 	}
 	
