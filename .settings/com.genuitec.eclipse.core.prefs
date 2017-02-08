@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+validator.Checked=src/main/webapp/libs/respond.min.js,src/main/webapp/libs/jquery.validation/1.14.0/validate-methods.js
+validator.Unchecked=
