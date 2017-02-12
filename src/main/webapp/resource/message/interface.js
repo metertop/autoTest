@@ -1,0 +1,491 @@
+var table;
+//遮罩层覆盖区域
+var $wrapper = $('#div-table-container');
+
+var interfaceId; //当前正在编辑的interface的id
+var parametersEditHmtl;
+
+/**
+ * ajax地址
+ */
+var getParamsUrl = "param-getParams"; //根据interfaceId来 获取parameters
+var paramSaveUrl = "param-save";
+var paramDelUrl = "param-del";
+var paramEditUrl = "param-edit";
+var listInterfaceUrl = "interface-list";
+var checkInterfaceNameUrl = "interface-checkName";
+var interfaceEditUrl = "interface-edit";
+var interfaceGetUrl = "interface-get";
+var interfaceDelUrl = "interface-del";
+
+var templateParams = {
+		tableTheads:["名称","中文名","类型","创建时间","状态","创建用户","最后修改","参数","操作"],
+		btnTools:[{
+			type:"primary",
+			size:"M",
+			markClass:"add-object",
+			iconFont:"&#xe600;",
+			name:"添加接口"
+		},{
+			type:"danger",
+			size:"M",
+			markClass:"batch-del-object",
+			iconFont:"&#xe6e2;",
+			name:"批量删除"
+		}],
+		formControls:[
+		{
+			edit:true,
+			label:"接口ID",  	
+			objText:"interfaceIdText",
+			input:[{	
+				hidden:true,
+				name:"interfaceId"
+				}]
+		},
+		{
+			required:true,
+			label:"接口名称",  
+			input:[{	
+				name:"interfaceName"
+				}]
+		},
+		{
+			required:true,
+			label:"接口类型",  	
+			select:[{	
+				name:"interfaceType",
+				option:[{
+					value:"SL",
+					text:"受理类"
+				},{
+					value:"CX",
+					text:"查询类",
+					selected:"selected"
+				}]
+				}]
+		},
+		{
+			required:true,
+			label:"中文名称",  	
+			input:[{	
+				name:"interfaceCnName"
+				}]
+		},
+		{
+			label:"模拟请求地址",  	
+			input:[{	
+				name:"requestUrlMock",
+				placeholder:"输入完整的Url请求地址,带http://"
+				}]
+		},
+		{
+			label:"真实请求地址",  	
+			input:[{	
+				name:"requestUrlReal",
+				placeholder:"输入完整的Url请求地址,带http://"
+				}]
+		},
+		{	
+			required:true,
+			label:"接口状态",  			
+			select:[{	
+				name:"status",
+				option:[{
+					value:"0",
+					text:"可用"
+				},{
+					value:"1",
+					text:"禁用"
+				}]
+				}]
+		},
+		{
+			edit:true,			
+			label:"创建日期",  
+			objText:"createTimeText",
+			input:[{	
+				hidden:true,
+				name:"createTime"
+				}]
+		},
+		{
+			edit:true,			
+			label:"创建用户",  
+			objText:"user.realNameText",
+		},
+		{
+			edit:true,
+			name:"user.userId"
+							
+		},
+		{
+			edit:true,			
+			label:"最后修改",  
+			objText:"lastModifyUserText",
+			input:[{	
+				hidden:true,
+				name:"lastModifyUser"
+				}]
+		}
+		]		
+	};
+
+var columnsSetting = [
+          {
+          	"data":null,
+          	"render":function(data, type, full, meta){                       
+                  return checkboxHmtl(data.interfaceName+'-'+data.interfaceCnName,data.interfaceId,"selectInterface");
+              }},
+          {"data":"interfaceId"},
+          {
+          	"className":"ellipsis",
+		    "data":"interfaceName",
+          	"render":CONSTANT.DATA_TABLES.COLUMNFUN.ELLIPSIS
+          	},
+          {
+      		"className":"ellipsis",
+		    "data":"interfaceCnName",
+		    "render":CONSTANT.DATA_TABLES.COLUMNFUN.ELLIPSIS
+          		},
+          {
+          	"data":null,
+          	"render":function(data, type, full, meta ){
+          		var option = {
+          				"SL":{
+          					btnStyle:"warning",
+          					status:"受理类"
+          					},
+          				"CX":{
+          					btnStyle:"success",
+          					status:"查询类"
+          				}
+          		};                  
+          		return labelCreate(data.interfaceType,option);
+              }},
+          {"data":"createTime","width":"120px"},
+          {
+          	"data":null,
+          	"render":function(data, type, full, meta ){
+                  return labelCreate(data.status);
+              }},
+          {"data":"user.realName"},{"data":"lastModifyUser"},
+          {
+              "data":null,
+              "render":function(data, type, full, meta){
+              	var context =
+              		[{
+            			type:"primary",
+            			size:"M",
+            			markClass:"edit-params",
+            			name:"管理"
+            		}];
+                  return btnTextTemplate(context);
+              }},
+          {
+              "data":null,
+              "render":function(data, type, full, meta){
+                var context = [{
+    	    		title:"接口编辑",
+    	    		markClass:"interface-edit",
+    	    		iconFont:"&#xe6df;"
+    	    	},{
+    	    		title:"接口删除",
+    	    		markClass:"interface-del",
+    	    		iconFont:"&#xe6e2;"
+    	    	}];
+              	return btnIconTemplate(context);
+              }}
+      ];	
+
+var eventList = {
+		".add-object":function(){
+			publish.renderParams.editPage.modeFlag = 0;					
+			layer_show("增加接口", editHtml, "850", "480",1);
+			publish.init();
+			
+		},
+		".batch-del-object":function(){
+			var checkboxList = $(".selectInterface:checked");
+			batchDelObjs(checkboxList,interfaceDelUrl);
+		},
+		".edit-params":function(){
+			var data = table.row( $(this).parents('tr') ).data();
+			interfaceId = data.interfaceId;
+			layer_show(data.interfaceName+"-接口参数管理",parametersEditHmtl, "850", "500",1,function(){
+				$("#parameters-table").spinModal();
+				$.get(getParamsUrl+"?interfaceId="+interfaceId,function(data){
+					if(data.returnCode == 0){
+						var html = '';
+						$.each(data.data,function(i,n){
+							var btnS = '<a href="javascript:;" class="btn btn-danger size-S radius parameter-del">删除</a>';							
+							html += '<tr class="text-c">'+
+									'<td class="param-id" id="'+n.parameterId+'">'+n.parameterId+'</td>'+
+									'<td class="param-edit-value" name="parameterIdentify">'+n.parameterIdentify+'</td>'+
+									'<td class="ellipsis param-edit-value" name="parameterName">'+ n.parameterName +'</td>'+
+									'<td class="ellipsis param-edit-value" name="defaultValue">' + n.defaultValue +'</td>'+
+									'<td class="param-edit-value" name="type">'+n.type+'</td>'+
+									'<td class="param-btns">'+btnS+'</td></tr>';
+						});
+						$("#parameters-tbody").html(html);	
+						$("#editTag").text("单击已修改参数属性");
+						$("#parameters-table").spinModal(false);
+					}else if(data.returnCode==3){
+						$("#no-parameter-tip").text("没有参数,你可以手动增加或者通过JSON报文导入");
+						$("#parameters-table").spinModal(false);
+					}else{
+						layer.alert(data.msg, {icon: 5});
+					}
+				});	
+			});	
+		},
+		".interface-edit":function(){
+			var data = table.row( $(this).parents('tr') ).data();
+			publish.renderParams.editPage.modeFlag = 1;
+			publish.renderParams.editPage.objId = data.interfaceId;
+			layer_show("编辑接口信息", editHtml, "850", "610",1);
+			publish.init();	
+		},
+		".interface-del":function(){
+			var data = table.row( $(this).parents('tr') ).data();
+			delObj("确定删除此接口？此操作同时会删除该接口下所有的报文以及场景相关数据,请谨慎操作!",interfaceDelUrl,data.interfaceId,this);
+		},
+		"#add-parameter":function(){
+			if($("#parameters-tbody").has('input').length>0 || $("#parameters-tbody").has('select').length>0){
+				layer.msg('请先保存或者取消已修改的内容!', {icon: 2,time:1000});
+				return false;
+			};
+			var html='';
+			var btnS='<a href="javascript:;" onclick="saveParameter(this)" class="btn btn-success size-S radius">保存</a>&nbsp;<a href="javascript:;" onclick="cancelAddParameter(this)" class="btn btn-danger size-S radius">取消</a>';
+			var selectS='<select><option value="Array">Array</option><option value="Map">Map</option><option value="String">String</option><option value="Number">Number</option><option value="List">List</option></select>';
+			html+='<tr class="text-c">'+
+				  '<td></td>'+
+				  '<td><input type="text"/>'+'</td>'+
+				  '<td><input type="text"/>'+'</td>'+
+				  '<td><input type="text"/>'+'</td>'+
+				  '<td>'+selectS+'</td>'+
+				  '<td>'+btnS+'</td></tr>';
+			$("#parameters-tbody").prepend(html);
+		},
+		".param-edit-value":function(){
+			editParameter();
+		},
+		"#load-json-parameter":function(){
+			
+		},
+		".parameter-del":function(){
+			layer.confirm('确认要删除吗？',function(index){
+				layer.close(index);
+				var id = $($(this).parent('td').siblings('td')[0]).attr("id");
+		    	$.post(paramDelUrl,{id:id},function(data){
+		    		if(data.returnCode==0){
+		    			$(this).parents("tr").remove();
+		                layer.msg('已删除',{icon:1,time:1500});
+		    		}else{
+		    			layer.alert(data.msg, {icon: 5});
+		    		}
+		    	});
+		        
+		    });
+		}
+		
+};
+
+var mySetting = {
+		eventList:eventList,
+		templateCallBack:function(df){
+			$("#parameters-page").load("_interface-Parameters.htm",function(){
+				parametersEditHmtl = $("#parameters-page").html();
+				$("#parameters-page").html('');
+				
+				df.resolve();
+			});
+		},
+		editPage:{
+			editUrl:interfaceEditUrl,
+			getUrl:interfaceGetUrl,
+			rules:{
+				interfaceName:{
+					required:true,
+					remote:{
+						url:checkInterfaceNameUrl,
+						type:"post",
+						dataType: "json",
+						data: {                   
+					        interfaceName: function() {
+					            return $("#interfaceName").val();
+					        },
+					        interfaceId:function(){
+					        	return $("#interfaceId").val();
+					        }
+					}}
+				},				
+				interfaceType:{
+					required:true,
+				},
+				interfaceCnName:{
+					required:true,
+					minlength:2,
+					maxlength:100
+				},
+				requestUrlMock:{
+					//required:true,
+					url:true
+				},
+				requestUrlReal:{
+					//required:true,
+					url:true
+				},
+				status:{
+					required:true,
+				}			
+			}
+
+		},		
+		listPage:{
+			listUrl:listInterfaceUrl,
+			tableObj:".table-sort",
+			columnsSetting:columnsSetting,
+			columnsJson:[0,7,8,10]
+		},
+		templateParams:templateParams		
+	};
+
+$(function(){			
+	publish.renderParams = $.extend(true,publish.renderParams,mySetting);
+	publish.init();
+});
+
+/******************************************************************************************************/
+/**编辑参数*/
+function editParameter(){
+	var tbobyP = $("#parameters-tbody");
+	if(tbobyP.has('input').length>0 || tbobyP.has('select').length>0){
+		layer.msg('请先保存或者取消已修改的内容!', {icon: 2,time:1000});
+		return false;
+	};
+	$("#editTag").text("Enter键提交更改,Esc取消更改");
+	var tdObj = $(this);
+	if (tdObj.children("input").length>0 || tdObj.children("select").length>0) {
+        return false;
+    }
+	var text = tdObj.text();
+	var currBtn = tdObj.siblings(".param-btns");
+	var btnHtml = $(currBtn).html();
+	var btnS='<a id="saveBtn" href="javascript:;" onclick="" class="btn btn-success size-S radius">保存</a>&nbsp;<a id="cancelBtn" href="javascript:;" onclick="" class="btn btn-danger size-S radius">取消</a>';
+	$(currBtn).html(btnS);
+	
+	tdObj.html("");
+	var inputObj;
+	if(tdObj.attr("name")=="type"){
+		var selectType = $("<select></select>").append("<option value='Array'>Array</option>")
+						.append("<option value='Map'>Map</option>")
+						.append("<option value='String'>String</option>")
+						.append("<option value='Number'>Number</option>")
+						.append("<option value='List'>List</option>");
+		
+		inputObj = selectType.css("font-size", tdObj.css("font-size"))
+							 .css("background-color", tdObj.css("background-color"))
+							 .width(tdObj.width()).val(text).appendTo(tdObj);
+	}else{
+		inputObj = $("<input type='text'>").css("font-size", tdObj.css("font-size"))
+										   .css("background-color", tdObj.css("background-color"))
+										   .width(tdObj.width()).val(text).appendTo(tdObj);       
+        inputObj.trigger("focus").trigger("select");
+	}
+	
+      inputObj.click(function () {
+          return false;
+      });
+      
+      
+      var saveFn = function(){
+	      var inputtext = inputObj.val();
+	          //获取parameterId
+	      var parameterId = tdObj.siblings(".param-id").attr("id");
+	      var attrName = tdObj.attr("name");
+	      
+	      $.post(paramEditUrl,{
+		      id:parameterId,
+		      attrName:attrName,
+		      attrValue:inputtext
+	      },
+	      function(data){
+	    	  if(data.returnCode==0){
+	    		  layer.msg('更新成功',{icon:1,time:1500});
+	    	  tdObj.html(inputtext); 
+	      }else{
+	    	  layer.alert(data.msg, {icon: 5});
+	    	  tdObj.html(text);       			  
+	      }
+	      $(currBtn).html(btnHtml);
+	      $("#editTag").text("单击以修改参数属性");
+	        	  	
+	          }); 
+      };
+      
+      $("#saveBtn").click(saveFn);
+      
+      $("#cancelBtn").click(function(){
+	      tdObj.html(text);
+	      $(currBtn).html(btnHtml);
+	      $("#editTag").text("单击以修改参数属性");
+      });
+      
+	  $(document).keyup(function (event) {
+	      var keycode = event.which;
+	      //回车情况
+	      if (keycode==13) {
+	    	  saveFn();                                     
+	      }
+	      //ESC情况
+	      if (keycode==27) {
+	          tdObj.html(text);
+	          $(currBtn).html(btnHtml);
+	          $("#editTag").text("单击以修改参数属性");
+	      }
+	      
+	  });       
+}
+
+/**取消增加参数*/
+function cancelAddParameter(obj){
+	$(obj).parents("tr").remove();
+}
+
+
+/**保存新增参数*/
+function saveParameter(obj){
+	var tdList = $(obj).parent('td').siblings();
+	var parameterIdentify = $(tdList[1]).children().val();
+	var parameterName = $(tdList[2]).children().val();
+	var defaultValue = $(tdList[3]).children().val();
+	var type = $(tdList[4]).children().val();
+	$.post(paramSaveUrl,{
+		parameterIdentify: parameterIdentify,
+		parameterName: parameterName,
+		defaultValue: defaultValue,
+		type: type,
+		"interfaceInfo.interfaceId": interfaceId
+		},function(data){
+			if(data.returnCode==0){
+				var btnS='<a href="javascript:;" class="btn btn-danger size-S radius parameter-del">删除</a>';
+				
+				var  html = '<tr class="text-c">'+
+					  '<td class="param-id" id="'+data.id+'">'+data.id+'</td>' +
+					  '<td class="param-edit-value" name="parameterIdentify">'+parameterIdentify+'</td>'+
+					  '<td class="param-edit-value" name="parameterName">'+parameterName+'</td>'+
+					  '<td class="param-edit-value" name="defaultValue">'+defaultValue+'</td>'+
+					  '<td class="param-edit-value" name="type">'+type+'</td>'+
+					  '<td class="param-btns">'+btnS+'</td></tr>';
+				$(obj).parents("tr").remove();
+				console.log(html);
+				$("#parameters-tbody").prepend(html);
+				layer.msg('增加成功',{icon:1,time:1500});	
+				$("#editTag").text("单击已修改参数属性");
+				$("#no-parameter-tip").text("");
+			}else{
+				layer.alert(data.msg, {icon: 5});
+			}
+	});
+}

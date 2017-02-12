@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.user.bean.OperationInterface;
+import com.dcits.constant.ReturnCodeConstant;
+import com.dcits.constant.SystemConstant;
 
 @Controller
 @Scope("prototype")
@@ -26,20 +28,20 @@ public class OperationInterfaceAction extends BaseAction<OperationInterface>{
 		Integer opId = 0;
 		switch (opType) {
 		case 1:
-			opId = 2;
+			opId = SystemConstant.MESSAGE_OP_ID;
 			break;
 		case 2:
-			opId = 85;
+			opId = SystemConstant.WEB_OP_ID;
 			break;
 		case 3:
 			jsonMap.put("data", new HashSet<OperationInterface>());
-			jsonMap.put("returnCode", 0);
+			jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 			return SUCCESS;
 		case 4:
-			opId = 63;
+			opId = SystemConstant.SYSTEM_OP_ID;
 			break;
 		case 5:
-			opId = 70;
+			opId = SystemConstant.USER_OP_ID;
 			break;
 		}
 		Set<OperationInterface> ops = operationInterfaceService.get(opId).getAllOis();
@@ -48,7 +50,7 @@ public class OperationInterfaceAction extends BaseAction<OperationInterface>{
 		}
 		
 		jsonMap.put("data", ops);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	

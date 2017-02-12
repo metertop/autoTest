@@ -133,7 +133,7 @@ function removeIframe(){
 	w		弹出层宽度（缺省调默认值）
 	h		弹出层高度（缺省调默认值）
 */
-function layer_show(title,url,w,h,type){
+function layer_show(title,url,w,h,type,success){
 	if (title == null || title == '') {
 		title=false;
 	};
@@ -156,7 +156,8 @@ function layer_show(title,url,w,h,type){
 		maxmin: false,
 		shade:0.4,
 		title: title,
-		content: url
+		content: url,
+		success:success
 	});
 }
 /*关闭弹出框口*/

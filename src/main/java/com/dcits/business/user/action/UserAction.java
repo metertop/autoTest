@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
-import com.dcits.business.user.bean.Role;
 import com.dcits.business.user.bean.User;
+import com.dcits.constant.ReturnCodeConstant;
 import com.dcits.util.MD5Util;
 import com.dcits.util.StrutsUtils;
 
@@ -38,25 +38,26 @@ public class UserAction extends BaseAction<User>{
 		String msg;
 		if(model!=null){
 			if(user!=null&&user.getUserId()==model.getUserId()){
-				jsonMap.put("returnCode", 4);
+				jsonMap.put("returnCode", ReturnCodeConstant.USER_RE_LOGIN_CODE);
 				jsonMap.put("msg", "你已登录该账号,请切换至不同的账号!");
 				return SUCCESS;
 			}
 			if(model.getStatus().equals("0")){
-				returnCode=0;
+				jsonMap.put("data", model);
+				returnCode=ReturnCodeConstant.SUCCESS_CODE;
 				msg="";
 				//将用户信息放入session中
 				StrutsUtils.getSessionMap().put("user", model);			
 				model.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
 				userService.edit(model);
-				logger.info("用户"+model.getRealName()+"[ID="+model.getUserId()+"]"+"登录成功!");
+				logger.info("用户"+model.getRealName()+"[ID="+model.getUserId()+"]"+"登录成功!");				
 			}else{
-				returnCode=2;
+				returnCode=ReturnCodeConstant.USER_ACCOUNT_LOCK_CODE;
 				msg="你的账号已被锁定,请联系管理员进行解锁。";
 			}
 			
 		}else{
-			returnCode=1;
+			returnCode=ReturnCodeConstant.USER_ERROR_ACCOUT_CODE;
 			msg="账号或密码不正确,请重新输入!";
 		}
 		jsonMap.put("returnCode", returnCode);
@@ -70,7 +71,7 @@ public class UserAction extends BaseAction<User>{
 	public String logout(){
 		logger.info("用户"+((User)StrutsUtils.getSessionMap().get("user")).getRealName()+"已登出!");
 		((SessionMap)StrutsUtils.getSessionMap()).invalidate();
-		jsonMap.put("returnCode", 0);			
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);			
 		return SUCCESS;
 	}
 	
@@ -78,9 +79,9 @@ public class UserAction extends BaseAction<User>{
 	public String judgeLogin(){
 		User user=(User)StrutsUtils.getSessionMap().get("user");
 		if(user!=null){
-			jsonMap.put("returnCode", 0);
+			jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		}else{
-			jsonMap.put("returnCode", 1);
+			jsonMap.put("returnCode", ReturnCodeConstant.NOT_LOGIN_CODE);
 		}
 		return SUCCESS;
 
@@ -93,9 +94,10 @@ public class UserAction extends BaseAction<User>{
 		
 		if(user!=null){
 			jsonMap.put("data", user);			
-			jsonMap.put("returnCode", 0);
+			jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		}else{
-			jsonMap.put("returnCode", 1);
+			jsonMap.put("msg", "用户未登录");
+			jsonMap.put("returnCode", ReturnCodeConstant.NOT_LOGIN_CODE);
 		}
 		return SUCCESS;
 	}
@@ -105,7 +107,7 @@ public class UserAction extends BaseAction<User>{
 		User user = (User)StrutsUtils.getSessionMap().get("user");		
 		userService.updateRealName(model.getRealName(), user.getUserId());
 		user.setRealName(model.getRealName());
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -113,9 +115,9 @@ public class UserAction extends BaseAction<User>{
 	public String verifyPasswd(){
 		User user=(User)StrutsUtils.getSessionMap().get("user");
 		if(user.getPassword().equals(MD5Util.code(model.getPassword()))){
-			jsonMap.put("returnCode", 0);			
+			jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);			
 		}else{
-			jsonMap.put("returnCode", 2);
+			jsonMap.put("returnCode", ReturnCodeConstant.USER_VALIDATE_ERROR_CODE);
 			jsonMap.put("msg", "密码验证失败!");
 		}		
 		return SUCCESS;
@@ -126,7 +128,7 @@ public class UserAction extends BaseAction<User>{
 		User user=(User)StrutsUtils.getSessionMap().get("user");
 		userService.resetPasswd(user.getUserId(), MD5Util.code(model.getPassword()));
 		user.setPassword(MD5Util.code(model.getPassword()));
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -134,24 +136,24 @@ public class UserAction extends BaseAction<User>{
 	@Override
 	public String del(){
 		if(userService.get(id).getUsername().equals("admin")){
-			jsonMap.put("returnCode", 2);
+			jsonMap.put("returnCode", ReturnCodeConstant.ILLEGAL_HANDLE_CODE);
 			jsonMap.put("msg", "不能删除预置管理员用户!");
 			return SUCCESS;
 		}
 		userService.delete(id);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
 	//锁定或者解锁用户
 	public String lock(){
 		if(model.getUsername().equals("admin")){
-			jsonMap.put("returnCode", 2);
+			jsonMap.put("returnCode", ReturnCodeConstant.ILLEGAL_HANDLE_CODE);
 			jsonMap.put("msg", "不能锁定预置管理员用户!");
 			return SUCCESS;
 		}
 		userService.lockUser(model.getUserId(), mode);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 		
 	}
@@ -159,7 +161,7 @@ public class UserAction extends BaseAction<User>{
 	//重置密码
 	public String resetPwd(){
 		userService.resetPasswd(model.getUserId(),MD5Util.code("111111"));
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -169,13 +171,10 @@ public class UserAction extends BaseAction<User>{
 	public String edit(){
 		User u1 = userService.validateUsername(model.getUsername(),model.getUserId());
 		if(u1!=null){
-			jsonMap.put("returnCode", 2);
+			jsonMap.put("returnCode", ReturnCodeConstant.NAME_EXIST_CODE);
 			jsonMap.put("msg", "用户名已存在!");
 			return SUCCESS;
 		}
-		Role r = new Role();
-		r.setRoleId(roleId);
-		model.setRole(r);
 		if(model.getUserId()==null){
 			//新增
 			model.setIfNew("1");
@@ -190,7 +189,7 @@ public class UserAction extends BaseAction<User>{
 			model.setPassword(u2.getPassword());			
 		}
 		userService.edit(model);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -199,10 +198,10 @@ public class UserAction extends BaseAction<User>{
 	public String filter(){
 		List<User> users = userService.findByRealName(model.getRealName());
 		if(users.size()==0){
-			jsonMap.put("returnCode", 2);
+			jsonMap.put("returnCode", ReturnCodeConstant.NO_RESULT_CODE);
 			jsonMap.put("msg", "没有查询到指定的用户");
 		}else{
-			jsonMap.put("returnCode", 0);		
+			jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);		
 		}
 		jsonMap.put("data",users );
 		return SUCCESS;

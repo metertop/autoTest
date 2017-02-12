@@ -100,9 +100,7 @@ var publish = {
 	    	 df.done(function(){
 	    		 that.renderData(that.renderParams.customCallBack);
 	    		 //防止事件被绑定多次
-	    		 if(that.renderParams.ifFirst==true){
-	    			 that.initListeners(that.renderParams.eventList); 
-	    		 }
+	    		 (that.renderParams.ifFirst==true) && (that.initListeners(that.renderParams.eventList));
 	    	 }); 
 	    	 if(that.renderParams.renderType=="list"){
 	    		 that.renderParams.listPage.beforeInit(df);
@@ -121,12 +119,12 @@ var publish = {
       * 不可选：
       * ifFirst: true 当前是否为本页面第一次初始化  防止事件被重复绑定 默认为true
       * 可选:
-      * customCallBack:数据渲染 不是list  edit页面的自定义数据渲染方法  
+      * customCallBack:数据渲染 不是list  edit页面的自定义数据渲染方法 或者二次渲染 
       * templateCallBack:默认的模板渲染之后 自定义的二次渲染
       * eventList:页面event绑定 默认{}
       * renderType: 当前渲染模式 listPage还是editPage 默认为list 可选edit
-      * userDefaultRender:是否使用默认的渲染  默认为true  可选 false为不使用,仅使用使用提供customCallBack回调方法中的渲染
-      * 
+      * userDefaultRender:是否使用默认的数据渲染  默认为true  可选 false为不使用,仅使用使用提供customCallBack回调方法中的渲染
+      * userDefaultTemplate:是否使用默认的模板渲染  默认为true 可选false为不使用,仅使用templateCallBack回调中的默认渲染
       * 
       * 
       * list页面
@@ -142,7 +140,7 @@ var publish = {
       * edit页面
       * 必须：
       * editUrl:编辑请求地址 必要
-      * 
+      * ifUseValidate:是否使用jqueryValidate插件  默认true  可选false  如果不使用,需要自己定义提交事件
       * 可选：
       * beforeInit:执行init方法之前需要执行的参数  请在该方法最调用df.resolve();
       * formObj:对应的form容器 默认为 ".form-horizontal" 可选
@@ -159,37 +157,33 @@ var publish = {
       * templateParams参数：
       * tableTheads:必须的  传入字符串数组,渲染成指定的表头  
       * btnTools:表格上方的工具栏 带文字和图标样式按钮
-      * 	参考如下数据格式：
-	  * 	[{
-			type:"success",
-			size:"S",
-			markClass:"",
-			iconFont:"",
-			name:""
-		   }] 
 	  * formControls: edit页面的表单控件渲染,参见下面的数据格式  需要某种类型的控件 必须需要将对应子节点下的flag设置为true
 	  *		   [{
 				edit:flase,
 				required:false,
-				label:"",  	
+				label:"",   	//如果没有label 该控件为隐藏input 同时需要填写下面的name
 				name:"",
 				objText:"",
 				input:[{	
 					flag:flase,
 					hidden:false,
 					value:"",
-					placeholder:""	
+					placeholder:"",
+					name:""	
 					}],
 				textarea:[{
 					flag:false,
 					placeholder:"",
-					value:""
+					value:"",
+					name:""	
 					}],
 				select:[{
 					flag:false,
+					name:""	,
 					option:[{
 						value:"",
-						text:""
+						text:"",
+						selected:""  //可选"selected"
 						}]
 					}],
 				button:[{
@@ -203,7 +197,8 @@ var publish = {
       */
      renderParams:{
     	 renderType:"list",
-    	 userDefaultRender:true,    	 
+    	 userDefaultRender:true,    
+    	 userDefaultTemplate:true,
     	 customCallBack:function(p){},
     	 templateCallBack:function(df){
     		 df.resolve();
@@ -224,9 +219,11 @@ var publish = {
     		 beforeInit:function(df){
         		 df.resolve();
         	 },
+        	 ifUseValidate:true,
     		 modeFlag:0,
     		 objId:null,
     		 editUrl:"",
+    		 saveUrl:"",
         	 formObj:".form-horizontal",
         	 getUrl:"",
         	 rules:{},
@@ -246,26 +243,41 @@ var publish = {
       * @param callback
       */
      renderTemplate:function(df,callback){
-    	 var t = this.renderParams.templateParams;
-    	 var html = "";
-    	//预编译handlebars模板
-		$("#template-page").load("../template/pageTemplate.htm",function(){
-			//list表格头
-			tableTheadTemplate = Handlebars.compile($("#table-thead-template").html());
-			btnTextTemplate = Handlebars.compile($("#btn-text-template").html());
-			btnIconTemplate = Handlebars.compile($("#btn-icon-template").html());
-			formControlTemplate = Handlebars.compile($("#form-control-template").html());
-			//渲染表头
-	    	 $("#table-thead").append(tableTheadTemplate(t.tableTheads));
-	    	 //渲染表格上方工具栏
-	    	 $("#btn-tools").append(btnTextTemplate(t.btnTools));
-	    	 
-	    	 //渲染editPage的表单控件
-	    	 editHtml = formControlTemplate(t.formControls);
-	    	 //传入回调进行二次的渲染如果对editPage做过自定义的渲染  那么必须重新定义全局变量 editHtml	    	
-	    	 callback(df);
-		});   	 
-    	
+    	 if(this.renderParams.userDefaultTemplate){
+    		 var t = this.renderParams.templateParams;
+        	 var html = "";
+        	//预编译handlebars模板
+    		$("#template-page").load("../template/pageTemplate.htm",function(){
+    			
+    			registHelper();
+    			
+    			btnTextTemplate = Handlebars.compile($("#btn-text-template").html());
+    			btnIconTemplate = Handlebars.compile($("#btn-icon-template").html());
+    			
+    			if($("#table-thead")){
+    				tableTheadTemplate = Handlebars.compile($("#table-thead-template").html());
+    				//渲染表头
+    		    	$("#table-thead").append(tableTheadTemplate(t.tableTheads));
+    			}
+    			
+    			if($("#btn-tools")){
+    				//渲染表格上方工具栏
+    		    	 $("#btn-tools").append(btnTextTemplate(t.btnTools));
+    			}
+    			
+    			if($("#edit-page")){
+    				 formControlTemplate = Handlebars.compile($("#form-control-template").html());       			
+	       	    	 //渲染editPage的表单控件
+	       	    	 editHtml = formControlTemplate(t.formControls);
+    			}
+    			
+    	    	 //传入回调进行二次的渲染如果对editPage做过自定义的渲染  那么必须重新定义全局变量 editHtml	    	
+    	    	 callback(df);
+    		}); 
+    	 }else{
+    		 callback(df);
+    	 }
+
      },
      /**
       * 内部所用的函数-渲染数据 不同的页面的渲染模式  通用为list(列表页) edit(编辑增加页) 其他类型自己扩展
@@ -282,10 +294,13 @@ var publish = {
     		 }    		 
     		 if(p.renderType=="edit"){
     			 var e = p.editPage;
+    			 var sUrl = e.editUrl;
     			 if(e.modeFlag==1){
     				 ObjectEditPage(e.objId,e.getUrl,e.renderCallback);
-    			 }
-    			 formValidate(e.formObj,e.rules,e.messages,e.editUrl,e.closeFlag,e.ajaxCallbackFun);
+    			 }else{
+    				 (e.saveUrl != null && e.saveUrl != "") && (sUrl = e.saveUrl);
+    			 }    			 
+    			 e.ifUseValidate && formValidate(e.formObj,e.rules,e.messages,sUrl,e.closeFlag,e.ajaxCallbackFun);
     		 }
     	 }	 
 		 callback(p);		 
@@ -461,17 +476,8 @@ function ObjectEditPage(id,ajaxUrl,callback){
 		if(data.returnCode==0){
 			var o=data.object;
 			//默认的渲染  object中同名id 控件 以及id名为 idText
-			$.each(o,function(k,v){
-				if(!(v instanceof Object)){
-					if($("#"+k)){
-						$("#"+k).val(v);
-					}
-					if($("#"+k+"Text")){
-						$("#"+k+"Text").text(v);
-					}
-				}
-			});			
-			//该回调可以自行渲染默认没有渲染到的控件
+			iterObj(o);		
+			//该回调可以自行渲染默认没有渲染完整的控件
 			callback(o);	
 			$(".form-horizontal").spinModal(false);
 		}else{
@@ -481,6 +487,30 @@ function ObjectEditPage(id,ajaxUrl,callback){
 	
 	
 }
+
+/**
+ * 迭代循环遍历json对象中属性
+ * @param jsonObj
+ * @param parentName 
+ */
+function iterObj(jsonObj,parentName){
+	$.each(jsonObj,function(k,v){
+		if(parentName!=null&&parentName!=""){
+			k = parentName + "\\." + k;
+		}
+		if(!(v instanceof Object)){	
+			if($("#"+k)){
+				$("#"+k).val(v);
+			}
+			if($("#"+k+"Text")){
+				$("#"+k+"Text").text(v);
+			}
+		}else{
+			iterObj(v,k);
+		}
+	});	
+}
+
 
 
 /**
@@ -493,6 +523,7 @@ function ObjectEditPage(id,ajaxUrl,callback){
  * @param ajaxCallbackFun  ajax提交中的回调函数  如传入null,则使用默认
  */
 function formValidate(formObj,rules,messages,ajaxUrl,closeFlag,ajaxCallbackFun){
+	console.log(messages);
 	var callbackFun = function(data){
 		if(data.returnCode==0){	
 			refreshTable();
@@ -530,3 +561,89 @@ function refreshTable(){
 
 }
 
+/**
+ * 获取json长度
+ * @param jsonData
+ * @returns {Number}
+ */
+function getJsonLength(jsonData){
+	var jsonLength = 0;
+	for(var item in jsonData){
+		jsonLength++;
+	}
+	return jsonLength;
+}
+
+/**
+ * 注册需要的handlerbars的helper
+ */
+function registHelper(){	
+	//比对用的helper
+	//使用{{#compare people.name '==' 'peter'}} {{else}} {{/compare}}
+	Handlebars.registerHelper('compare', function(left, operator, right, options) {
+		if (arguments.length < 3) {
+			throw new Error('Handlerbars Helper "compare" needs 2 parameters');
+		}
+		var operators = {
+			'==': function(l, r) {return l == r; },
+			'===': function(l, r) {return l === r; },
+			'!=': function(l, r) {return l != r; },
+			'!==': function(l, r) {return l !== r; },
+			'&lt;': function(l, r) {return l < r; },
+			'&gt;': function(l, r) {return l > r; },
+			'&lt;=': function(l, r) {return l <= r; },
+			'&gt;=': function(l, r) {return l >= r; },
+			'typeof': function(l, r) {return typeof l == r; }
+		};
+		if (!operators[operator]) {
+			throw new Error('Handlerbars Helper "compare" doesn\'t know the operator ' + operator);
+		}
+		var result = operators[operator](left, right);
+		if (result) {
+			return options.fn(this);
+		} else {
+			return options.inverse(this);
+		}});
+}
+
+/**
+ * 生成标签模板
+ * 
+ * @param option   
+ * {
+	"0":{
+		btnStyle:"success",
+		status:"正常"
+		},
+	"1":{
+		btnStyle:"default",
+		status:"失败"
+		}
+	}
+ 以上是默认的配置,你也可以传入自定义的配置
+ * @param data   ["1","0"] 数组或者 字符串 number都可以
+ * @returns {String}
+ */
+function labelCreate(data,option){
+	var html = '';
+	var datas = [];
+	if(!(data instanceof Array)){
+		datas.push(data);
+	}
+	$.each(datas,function(i,n){
+        if(option && option[n]){
+            html += '<span class="label label-'+option[n]["btnStyle"]+' radius">'+option[n]["status"]+'</span>';
+        }else{
+            if(n=="0"){
+            	html += '<span class="label label-success radius">正常</span>';
+            }
+            if(n=="1"){
+            	html += '<span class="label label-danger radius">禁用</span>';;
+            }
+        }
+        if(datas.length>(i+1)){
+        	html +="&nbsp;";
+        }
+    });
+	return html;
+}

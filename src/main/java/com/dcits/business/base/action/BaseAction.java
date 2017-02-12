@@ -13,11 +13,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dcits.business.base.bean.PageModel;
 import com.dcits.business.base.service.BaseService;
+import com.dcits.business.message.service.InterfaceInfoService;
+import com.dcits.business.message.service.InterfaceMockService;
+import com.dcits.business.message.service.MessageSceneService;
+import com.dcits.business.message.service.MessageService;
+import com.dcits.business.message.service.ParameterService;
+import com.dcits.business.message.service.SceneValidateRuleService;
+import com.dcits.business.message.service.TestConfigService;
+import com.dcits.business.message.service.TestDataService;
+import com.dcits.business.message.service.TestReportService;
+import com.dcits.business.message.service.TestResultService;
+import com.dcits.business.message.service.TestSetService;
+import com.dcits.business.system.service.DataDBService;
 import com.dcits.business.system.service.GlobalSettingService;
 import com.dcits.business.user.service.MailService;
 import com.dcits.business.user.service.OperationInterfaceService;
 import com.dcits.business.user.service.RoleService;
 import com.dcits.business.user.service.UserService;
+import com.dcits.constant.ReturnCodeConstant;
 import com.dcits.util.StrutsUtils;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -62,7 +75,30 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	protected MailService mailService;
 	@Autowired
 	protected GlobalSettingService globalSettingService;
-	
+	@Autowired
+	protected DataDBService dataDBService;
+	@Autowired
+	protected InterfaceInfoService interfaceInfoService;
+	@Autowired
+	protected InterfaceMockService interfaceMockService;
+	@Autowired
+	protected MessageService messageService;
+	@Autowired
+	protected MessageSceneService messageSceneService;
+	@Autowired
+	protected ParameterService parameterService;
+	@Autowired
+	protected SceneValidateRuleService sceneValidateRuleService;
+	@Autowired
+	protected TestConfigService testConfigService;
+	@Autowired
+	protected TestDataService testDataService;
+	@Autowired
+	protected TestReportService testReportService;
+	@Autowired
+	protected TestResultService testResultService;
+	@Autowired
+	protected TestSetService testSetService;
 	
 	/**
 	 * 通用 list方法
@@ -73,14 +109,14 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 		Map<String,Object>  dt = StrutsUtils.getDTParameters();
 		PageModel<T> pu = baseService.findByPager(start, length,(String)dt.get("orderDataName"),(String)dt.get("orderType"),(String)dt.get("searchValue"),(List<String>)dt.get("dataParams"));
 		jsonMap.put("draw", draw);
-		jsonMap.put("data", pu.getDatas());
+		jsonMap.put("data",processListData(pu.getDatas()));
 		jsonMap.put("recordsTotal", pu.getRecordCount());
 		if(!((String)dt.get("searchValue")).equals("")){
 			jsonMap.put("recordsFiltered", pu.getDatas().size());
 		}else{
 			jsonMap.put("recordsFiltered", pu.getRecordCount());
 		}
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -91,8 +127,8 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	 */
 	public String listAll(){
 		List<T> ts = baseService.findAll();
-		jsonMap.put("data", ts);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("data", processListData(ts));
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -104,7 +140,7 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	 */
 	public String del(){
 		baseService.delete(id);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -114,7 +150,7 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	 * @return
 	 */
 	public String get(){
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		jsonMap.put("object", baseService.get(id));
 		return SUCCESS;
 	}
@@ -126,18 +162,18 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	 */
 	public String edit(){
 		baseService.edit(model);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
 	/**
 	 * 通用方法 save
-	 * 保证新的实体对象  同edit() 保证传入的属性是完整的  否则请在子类中重写该方法
+	 * 保证新的实体对象,同时返回新增的实体ID的值  保证传入的属性是完整的  否则请在子类中重写该方法
 	 * @return
 	 */
 	public String save(){
-		baseService.save(model);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("id", baseService.save(model));
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -169,6 +205,16 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 		Object object = serviceNameField.get(this);
 		Field baseServiceNameField = this.getClass().getSuperclass().getDeclaredField("baseService");
 		baseServiceNameField.set(this, object);		
+	}
+	
+	/**
+	 * list数据的加工
+	 * 子类可重写该方法对发给前台的数据进行再一次处理
+	 * @param o
+	 * @return
+	 */
+	public Object processListData(Object o){
+		return o;
 	}
 	
 	/************************************GET-SET***********************************************/

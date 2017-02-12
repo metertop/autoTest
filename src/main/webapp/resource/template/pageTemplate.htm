@@ -37,48 +37,14 @@
     {{/each}}
 </script>
    
-   
 <!-- edit页面各表单控件模板 -->  
-<!-- 
-[{
-	edit:flase,
-	required:false,
-	label:"",  	
-	objText:"",
-	input:[{	
-		hidden:false,
-		value:"",
-		name:"",
-		placeholder:""	
-		}],
-	textarea:[{
-		placeholder:"",
-		value:"",
-		name:""
-		}],
-	select:[{
-		name:"",
-		option:[{
-			value:"",
-			text:"",
-			selected:false
-			}]
-		}],
-	button:[{
-		name:"",
-		style:"",
-		markClass:"",
-		value:""		
-		}]	
-}]
- -->
-
 <script id="form-control-template" type="text/x-handlebars-template">
 	<article class="page-container">
 	<form action="" method="post" class="form form-horizontal" id="form-edit">
 	{{#each this}}
-		<div class="row cl {{#if edit}}editFlag{{/if}}" {{#if edit}}style="display: none"{{/if}}>
-			<label class="form-label col-xs-4 col-sm-3">{{#if required}}<span class="c-red">*</span>{{/if}}{{{label}}}: </label>
+		{{#if label}}
+		<div class="row cl {{#if edit}}editFlag{{/if}}" {{#if edit}}style="display: none"{{/if}}>			
+			<label class="form-label col-xs-4 col-sm-3">{{#if required}}<span class="c-red">*</span>{{/if}}{{{label}}}: </label>			
 			<div class="formControls col-xs-8 col-sm-9">
 				{{#if objText}}
 					<span id="{{objText}}"></span>
@@ -100,7 +66,7 @@
 			  			<select class="select" size="1" id="{{name}}" name="{{name}}">
 							{{#with option}}
 							{{#each this}}
-								<option value="{{value}}">{{text}}</option>
+								<option value="{{value}}" {{selected}}>{{text}}</option>
 							{{/each}}
 							{{/with}}
 			  			</select>
@@ -114,6 +80,9 @@
 				{{/if}}						
 			</div>
 		</div>	
+	{{else}}
+		<input type="hidden" id="{{name}}" name="{{name}}"/>
+	{{/if}}
 	{{/each}}
 	<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">

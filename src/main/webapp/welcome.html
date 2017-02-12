@@ -96,32 +96,7 @@
 <script type="text/javascript" src="libs/h-ui/js/H-ui.js"></script>
 <script>
     $(document).ready(function(){
-        //获取当前登陆用户的信息
-        $.post("user-getLoginUserInfo",function(data){
-            if(data.returnCode==0){
-                $("#group_name").text(data.data.role.roleGroup);
-                $("#real_name").text(data.data.realName);
-                $("#last_login_time").text(data.data.lastLoginTime);
-                parent.$("#role_name").text(data.data.role.roleName);
-                parent.$("#real_name").text(data.data.realName);
-                parent.$("#user_id").val(data.data.userId);
-                
-                if(data.data.role.roleName!="admin"){
-                	 parent.$(".adminPower").css("display","none");
-                }
-            }else{
-            	parent.window.location.href="login.html";
-            }
-        });
         
-       	$.get("global-getWebSettings",function(data){
-       		if(data.returnCode==0){			
-       			$("#notice").text(data.notice);
-       			parent.$("#version").text("V"+data.version);
-       		}else{
-       			layer.alert(data.msg,{icon:5});
-       		}
-       	});
     });
 </script>
 </body>

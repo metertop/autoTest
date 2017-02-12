@@ -8,5 +8,7 @@ public interface RoleService extends BaseService<Role>{
 	 Role get(String roleName);
 	
 	 void changeUserRole(int roleId);
+	 
+	 void del(int roleId);
 
 }

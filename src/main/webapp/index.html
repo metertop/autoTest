@@ -74,7 +74,7 @@
             <dt><i class="Hui-iconfont">&#xe636;</i> 接口自动化<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a _href="htmls/interfaceTest/A_interfaceList.html" data-title="接口管理-接口自动化" href="javascript:void(0)">接口管理</a></li>
+                    <li><a _href="resource/message/interface.html" data-title="接口管理-接口自动化" href="javascript:void(0)">接口管理</a></li>
                     <li><a _href="htmls/interfaceTest/A_messageList.html" data-title="报文管理-接口自动化" href="javascript:void(0)">报文管理</a></li>
                     <li><a _href="htmls/interfaceTest/A_setList.html" data-title="测试集管理-接口自动化" href="javascript:void(0)">测试集管理</a></li>
                     <li><a _href="htmls/interfaceTest/A_autoTest.html" data-title="测试执行-接口自动化" href="javascript:void(0)">测试执行</a></li>
@@ -140,10 +140,10 @@
                 <ul>
                 	<li><a _href="htmls/system/autoTask.html" data-title="定时任务" href="javascript:void(0)">定时任务</a></li>
                     <li><a _href="resource/user/user.html" data-title="用户管理" href="javascript:void(0)">用户管理</a></li>
-                    <li><a _href="htmls/user/roleList.html" data-title="角色权限" href="javascript:void(0)">角色权限</a></li>
-                    <li><a _href="htmls/system/opInterface.html" data-title="操作接口" href="javascript:void(0)">操作接口</a></li>
-                    <li><a _href="htmls/system/queryDatabaseList.html" data-title="查询数据库配置" href="javascript:void(0)">查询配置</a></li>
-                    <li><a _href="htmls/system/globalSetting.html" data-title="全局配置" href="javascript:void(0)">全局配置</a></li>
+                    <li><a _href="resource/user/role.html" data-title="角色权限" href="javascript:void(0)">角色权限</a></li>
+                    <li><a _href="resource/system/opInterface.html" data-title="操作接口" href="javascript:void(0)">操作接口</a></li>
+                    <li><a _href="resource/system/queryDbList.html" data-title="查询数据库配置" href="javascript:void(0)">查询配置</a></li>
+                    <li><a _href="resource/system/globalSetting.html" data-title="全局配置" href="javascript:void(0)">全局配置</a></li>
                 </ul>
             </dd>
         </dl>
@@ -162,7 +162,7 @@
     <div id="iframe_box" class="Hui-article">
         <div class="show_iframe">
             <div style="display:none" class="loading"></div>
-            <iframe scrolling="yes" frameborder="0" src="welcome.html"></iframe>
+            <iframe scrolling="yes" frameborder="0" src="welcome.html" name="welcome"></iframe>
         </div>
     </div>
     <input type="hidden" id="user_id"/>
@@ -172,13 +172,72 @@
 <script type="text/javascript" src="libs/h-ui/js/H-ui.js"></script>
 <script type="text/javascript" src="libs/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript">
+	var childFrame = $(window.frames['welcome'].document);
     $(document).ready(function(){
     	$(".openIframeNew").on("click",function(){
     		Hui_admin_tab(this);
-    	});
-    	getMailNum();      
-        //setInterval(getMailNum,15000);  	
+    	});   	
+    	getUserInfo();        	
     });
+    
+    function getUserInfo(){
+    	var userInfo;
+    	var df = $.Deferred();
+    	df.done(function(){
+    		if(userInfo != undefined){
+    			getSetting();       
+    	    	getMailNum(); 
+    	    	//setInterval(getMailNum,15000); 
+    			childFrame.find("#group_name").text(userInfo.role.roleGroup);
+            	childFrame.find("#real_name").text(userInfo.realName);
+            	childFrame.find("#last_login_time").text(userInfo.lastLoginTime);
+                $("#role_name").text(userInfo.role.roleName);
+                $("#real_name").text(userInfo.realName);
+                $("#user_id").val(userInfo.userId);
+                
+                if(userInfo.role.roleName!="admin"){
+                	$(".adminPower").css("display","none");
+                }
+    		}
+    	});
+    	$.post("user-getLoginUserInfo",function(data){
+    		if(data.returnCode==0){
+    			userInfo = data.data;
+    			df.resolve();
+    		}else if(data.returnCode==7){
+    			var username = getCookie("username");
+            	var password = getCookie("password");
+            	if(username!=null&&password!=null){
+            		$.post("user-toLogin",{
+                        username:username,
+                        password:password
+                    },function(data){
+                        if(data.returnCode==0){
+                        	userInfo = data.data;
+                        	df.resolve();
+                        }else{
+                        	window.location.href="login.html";
+                        }
+                    });
+            	}else{
+            		window.location.href="login.html";
+            	}
+    		}else{
+    			window.location.href="login.html";
+    		}	
+    		
+    	});
+    }
+    
+    //获取设置
+    function getSetting(){
+    	$.get("global-getWebSettings",function(data){
+       		if(data.returnCode==0){			
+       			childFrame.find("#notice").text(data.notice);
+       			$("#version").text("V"+data.version);
+       		}
+       	});
+    }
     
 	//获取当前用户的未读邮件数量
 	function getMailNum(){

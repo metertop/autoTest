@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 
+import com.dcits.constant.ReturnCodeConstant;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -23,7 +24,7 @@ public class InterceptorAction extends ActionSupport{
 	
 		
 	public String noLogin(){
-		jsonMap.put("returnCode", 7);
+		jsonMap.put("returnCode", ReturnCodeConstant.NOT_LOGIN_CODE);
 		jsonMap.put("msg", "你还没有登陆或者登陆已失效,请重新登陆");
 		logger.info("用户没有登录,请求不通过!");
 		return SUCCESS;
@@ -31,14 +32,14 @@ public class InterceptorAction extends ActionSupport{
 	}
 		
 	public String noPower(){
-		jsonMap.put("returnCode", 8);
+		jsonMap.put("returnCode", ReturnCodeConstant.NO_POWER_CODE);
 		jsonMap.put("msg", "你没有权限进行此操作");
 		logger.info("用户权限不够,请求不通过!");
 		return SUCCESS;
 	}
 		
 	public String error(){
-		jsonMap.put("returnCode", 1);
+		jsonMap.put("returnCode", ReturnCodeConstant.SYSTEM_ERROR_CODE);
 		jsonMap.put("msg", "系统内部错误,请稍后再试");
 		logger.error(ActionContext.getContext().getValueStack().findValue("exception"));
 		logger.error("系统内部错误,请求失败!");
@@ -46,21 +47,21 @@ public class InterceptorAction extends ActionSupport{
 	}
 	
 	public String opDisable(){
-		jsonMap.put("returnCode", 11);
+		jsonMap.put("returnCode", ReturnCodeConstant.OP_DISABLE_CODE);
 		jsonMap.put("msg", "该操作接口已被设置禁止调用!");
 		logger.info("该操作接口已被设置禁止调用!");
 		return SUCCESS;
 	}
 	
 	public String opNotfound(){
-		jsonMap.put("returnCode", 13);
+		jsonMap.put("returnCode", ReturnCodeConstant.OP_NOTFOUND_CODE);
 		jsonMap.put("msg", "未定义的操作接口");
 		logger.info("不存在该接口!");
 		return SUCCESS;
 	}
 	
 	public String scriptUpload(){
-		jsonMap.put("returnCode", 10);
+		jsonMap.put("returnCode", ReturnCodeConstant.FILE_UPLOAD_SUCCESS_CODE);
 		jsonMap.put("msg", "文件上传成功!");
 		return SUCCESS;
 	}

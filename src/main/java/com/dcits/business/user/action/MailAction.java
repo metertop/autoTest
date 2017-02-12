@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.user.bean.Mail;
 import com.dcits.business.user.bean.User;
+import com.dcits.constant.ReturnCodeConstant;
 import com.dcits.util.StrutsUtils;
 
 @Controller
@@ -36,7 +37,7 @@ public class MailAction extends BaseAction<Mail>{
 		User user = (User) StrutsUtils.getSessionMap().get("user");
 		int num = mailService.getNoReadNum(user.getUserId());
 		jsonMap.put("mailNum", num);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -58,7 +59,7 @@ public class MailAction extends BaseAction<Mail>{
 			}
 		}
 		jsonMap.put("data", mails);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -68,7 +69,7 @@ public class MailAction extends BaseAction<Mail>{
 			if(statusName.equals("sendStatus")){
 				Mail mail1 = mailService.get(model.getMailId());
 				if(mail1.getReceiveUser()==null){
-					jsonMap.put("returnCode", 3);
+					jsonMap.put("returnCode", ReturnCodeConstant.MAIL_MISS_RECEIVER_CODE);
 					jsonMap.put("msg", "需要选定一个收件用户才能发送!");
 					return SUCCESS;
 				}
@@ -76,9 +77,9 @@ public class MailAction extends BaseAction<Mail>{
 				mailService.edit(mail1);
 			}
 			mailService.changeStatus(model.getMailId(), statusName, status);
-			jsonMap.put("returnCode", 0);
+			jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		}else{
-			jsonMap.put("returnCode", 2);
+			jsonMap.put("returnCode", ReturnCodeConstant.MISS_PARAM_CODE);
 			jsonMap.put("msg", "参数不正确!");
 		}		
 		return SUCCESS;
@@ -93,7 +94,7 @@ public class MailAction extends BaseAction<Mail>{
 			jsonMap.put("receiveUserId",model.getReceiveUser().getUserId());
 		}		
 		jsonMap.put("mail", model);
-		jsonMap.put("returnCode", 0);		
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);		
 		return SUCCESS;
 	}
 	
@@ -101,7 +102,7 @@ public class MailAction extends BaseAction<Mail>{
 	//目前只能删除未发送的邮件
 	public String del(){
 		mailService.delete(model.getMailId());
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 
@@ -125,7 +126,7 @@ public class MailAction extends BaseAction<Mail>{
 		}else{
 			mailService.edit(model);
 		}
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	

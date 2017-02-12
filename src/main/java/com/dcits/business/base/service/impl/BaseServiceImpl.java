@@ -11,6 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.dcits.business.base.bean.PageModel;
 import com.dcits.business.base.dao.BaseDao;
 import com.dcits.business.base.service.BaseService;
+import com.dcits.business.message.dao.InterfaceInfoDao;
+import com.dcits.business.message.dao.InterfaceMockDao;
+import com.dcits.business.message.dao.MessageDao;
+import com.dcits.business.message.dao.MessageSceneDao;
+import com.dcits.business.message.dao.ParameterDao;
+import com.dcits.business.message.dao.SceneValidateRuleDao;
+import com.dcits.business.message.dao.TestConfigDao;
+import com.dcits.business.message.dao.TestDataDao;
+import com.dcits.business.message.dao.TestReportDao;
+import com.dcits.business.message.dao.TestResultDao;
+import com.dcits.business.message.dao.TestSetDao;
+import com.dcits.business.system.dao.DataDBDao;
 import com.dcits.business.system.dao.GlobalSettingDao;
 import com.dcits.business.user.dao.MailDao;
 import com.dcits.business.user.dao.OperationInterfaceDao;
@@ -39,7 +51,30 @@ public class BaseServiceImpl<T> implements BaseService<T>{
 	protected MailDao mailDao;
 	@Autowired
 	protected RoleDao roleDao;
-	
+	@Autowired
+	protected DataDBDao dataDBDao;
+	@Autowired
+	protected InterfaceInfoDao interfaceInfoDao;
+	@Autowired
+	protected InterfaceMockDao interfaceMockDao;
+	@Autowired
+	protected MessageDao messageDao;
+	@Autowired
+	protected MessageSceneDao messageSceneDao;
+	@Autowired
+	protected ParameterDao parameterDao;
+	@Autowired
+	protected SceneValidateRuleDao sceneValidateRuleDao;
+	@Autowired
+	protected TestConfigDao testConfigDao;
+	@Autowired
+	protected TestDataDao testDataDao;
+	@Autowired
+	protected TestReportDao testReportDao;
+	@Autowired
+	protected TestResultDao testResultDao;
+	@Autowired
+	protected TestSetDao testSetDao;
 	
 	public BaseServiceImpl(){
 		ParameterizedType type=(ParameterizedType)this.getClass().getGenericSuperclass();

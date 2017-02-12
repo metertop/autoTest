@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.user.bean.OperationInterface;
 import com.dcits.business.user.bean.Role;
+import com.dcits.constant.ReturnCodeConstant;
+import com.dcits.constant.SystemConstant;
 import com.dcits.util.StrutsUtils;
 
 @Controller
@@ -25,49 +27,45 @@ public class RoleAction extends BaseAction<Role>{
 	
 	private String addOpIds;
 	
-	
-	//展示当前的所有的角色
 	@Override
-	public String listAll(){
-		List<Role> roles=roleService.findAll();
+	public Object processListData(Object o){
+		List<Role> roles = (List<Role>) o;
 		for(Role r:roles){
 			r.setOiNum();
 		}
-		jsonMap.put("returnCode", 0);
-		jsonMap.put("data", roles);
-		return SUCCESS;
+		return o;
 	}
 	
 	//删除角色,但是不能删除预置的管理员账户
+	@Override
 	public String del(){
-			Role role = roleService.get(model.getRoleId());
-			String roleName = role.getRoleName();
-			if(roleName.equals("admin")||roleName.equals("default")){
-				jsonMap.put("returnCode", 2);
+			if(id == SystemConstant.ADMIN_ROLE_ID || id == SystemConstant.DEFAULT_ROLE_ID){
+				jsonMap.put("returnCode",ReturnCodeConstant.ILLEGAL_HANDLE_CODE);
 				jsonMap.put("msg", "不能删除超级管理员角色或者默认角色");
 				return SUCCESS;
 			}
-			roleService.delete(model.getRoleId());
+			roleService.del(id);
 			//删除其他角色,配置该角色的用户变更成default角色
-			jsonMap.put("returnCode", 0);
+			jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
-	//根据roleId查找指定的role信息
-	public String get(){
-		Role role = roleService.get(model.getRoleId());
-		jsonMap.put("role", role);
-		jsonMap.put("returnCode", 0);
-		return SUCCESS;
-	}
 	
 	//编辑或者新增role信息
+	@Override
 	public String edit(){
+		
+		if(model.getRoleId() == SystemConstant.ADMIN_ROLE_ID || model.getRoleId() == SystemConstant.DEFAULT_ROLE_ID){			
+			jsonMap.put("returnCode", ReturnCodeConstant.ILLEGAL_HANDLE_CODE);
+			jsonMap.put("msg", "不能删除预置管理员或者默认角色信息");
+			return SUCCESS;
+		}
+		
 		//判断roleName的合法性:不能重复
 		Role r = roleService.get(model.getRoleName());
 		if(r!=null){
 			if((model.getRoleId()!=null&&r.getRoleId()!=model.getRoleId())||model.getRoleId()==null){
-				jsonMap.put("returnCode", 2);
+				jsonMap.put("returnCode", ReturnCodeConstant.NAME_EXIST_CODE);
 				jsonMap.put("msg", "该角色名已存在,请更换!");
 				return SUCCESS;
 			}			
@@ -77,7 +75,7 @@ public class RoleAction extends BaseAction<Role>{
 			model.setOis(roleService.get(model.getRoleId()).getOis());
 		}
 		roleService.edit(model);		
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -99,7 +97,7 @@ public class RoleAction extends BaseAction<Role>{
 		}
 				
 		jsonMap.put("interfaces", ops);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	
@@ -129,7 +127,7 @@ public class RoleAction extends BaseAction<Role>{
 		}
 		role.setOis(ops);
 		roleService.edit(role);
-		jsonMap.put("returnCode", 0);
+		jsonMap.put("returnCode", ReturnCodeConstant.SUCCESS_CODE);
 		return SUCCESS;
 	}
 	

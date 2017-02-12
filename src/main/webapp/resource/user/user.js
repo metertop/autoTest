@@ -1,6 +1,88 @@
 var table;
 //遮罩层覆盖区域
 var $wrapper = $('#div-table-container');
+
+var templateParams = {
+		tableTheads:["用户名","姓名","角色","当前状态","最近登录","创建时间","操作"],
+		btnTools:[{
+			type:"primary",
+			size:"M",
+			markClass:"add-object",
+			iconFont:"&#xe600;",
+			name:"添加用户"
+		}],
+		formControls:[
+		{
+			edit:true,
+			required:false,
+			label:"&nbsp;&nbsp;ID",  	
+			objText:"userIdText",
+			input:[{	
+				hidden:true,
+				name:"userId"
+				}]
+		},
+		{
+			edit:false,
+			required:true,
+			label:"用户名",  			
+			input:[{	
+				hidden:false,
+				name:"username",
+				placeholder:"2到20个字符"
+				}]
+		},
+		{
+			edit:false,
+			required:true,
+			label:"姓&nbsp;名",  			
+			input:[{	
+				hidden:false,
+				name:"realName",
+				placeholder:"2到20个字符"
+				}]
+		},
+		{
+			edit:false,
+			required:true,
+			label:"角&nbsp;色",  			
+			select:[{
+				name:"role.roleId"
+				}]
+		},
+		{
+			edit:true,
+			required:false,
+			label:"创建时间",  			
+			objText:"createTimeText",
+			input:[{	
+				hidden:true,
+				name:"createTime"
+				}]
+		},
+		{
+			edit:true,
+			required:false,
+			label:"当前状态",  			
+			objText:"statusText",
+			input:[{	
+				hidden:true,
+				name:"status"
+				}]
+		},
+		{
+			edit:true,
+			required:false,
+			label:"最近登录",  			
+			objText:"lastLoginTimeText",
+			input:[{	
+				hidden:true,
+				name:"lastLoginTime"
+				}]
+		},	
+		]		
+	};
+
 var columnsSetting = [{"data":null,
 	 "render":function(data, type, full, meta){
 		  		return checkboxHmtl(data.username+'-'+data.realName,data.userId,"selectUser");
@@ -35,12 +117,12 @@ var columnsSetting = [{"data":null,
 	
 	},
 	{
-		   "data":"createTime",
+		"data":"createTime",
 	    "className":"ellipsis",
 	    "render":CONSTANT.DATA_TABLES.COLUMNFUN.ELLIPSIS
 	},
 	{
-		   "data":null,
+		"data":null,
 	    "render":function(data, type, full, meta){
 	    	var statusIcon='&#xe605;';
 	    	if(data.status=="0"){
@@ -65,86 +147,7 @@ var columnsSetting = [{"data":null,
 	    	
 	    }}];	
 
-var templateParams = {
-	tableTheads:["用户名","姓名","角色","当前状态","最近登录","创建时间","操作"],
-	btnTools:[{
-		type:"primary",
-		size:"M",
-		markClass:"add-object",
-		iconFont:"&#xe600;",
-		name:"添加用户"
-	}],
-	formControls:[
-	{
-		edit:true,
-		required:false,
-		label:"&nbsp;&nbsp;ID",  	
-		objText:"userIdText",
-		input:[{	
-			hidden:true,
-			name:"userId"
-			}]
-	},
-	{
-		edit:false,
-		required:true,
-		label:"用户名",  			
-		input:[{	
-			hidden:false,
-			name:"username",
-			placeholder:"2到20个字符"
-			}]
-	},
-	{
-		edit:false,
-		required:true,
-		label:"姓&nbsp;名",  			
-		input:[{	
-			hidden:false,
-			name:"realName",
-			placeholder:"2到20个字符"
-			}]
-	},
-	{
-		edit:false,
-		required:true,
-		label:"角&nbsp;色",  			
-		select:[{
-			name:"roleId"
-			}]
-	},
-	{
-		edit:true,
-		required:false,
-		label:"创建时间",  			
-		objText:"createTimeText",
-		input:[{	
-			hidden:true,
-			name:"createTime"
-			}]
-	},
-	{
-		edit:true,
-		required:false,
-		label:"当前状态",  			
-		objText:"statusText",
-		input:[{	
-			hidden:true,
-			name:"status"
-			}]
-	},
-	{
-		edit:true,
-		required:false,
-		label:"最近登录",  			
-		objText:"lastLoginTimeText",
-		input:[{	
-			hidden:true,
-			name:"lastLoginTime"
-			}]
-	},	
-	]		
-};
+
 
 var beforeEditInit = function(df){
 	$.get("role-listAll",function(result){
@@ -154,7 +157,7 @@ var beforeEditInit = function(df){
 			for(var i=0;i<roles.length;i++){
 				optionHtml+='<option value="'+roles[i].roleId+'">'+roles[i].roleName+'</option>';
 			}
-			$("#roleId").html(optionHtml);
+			$("#role\\.roleId").html(optionHtml);
 			df.resolve();
 		}
 	});
@@ -235,7 +238,6 @@ var mySetting = {
 			getUrl:"user-get",
 			rules:{username:{required:true,minlength:2,maxlength:20},realName:{required:true,minlength: 2,maxlength: 20}},
 			renderCallback:function(o){
-				$("#roleId").val(o.role.roleId);
 				var statusMsg='';
 				o.status=="0"?statusMsg="正常":statusMsg="锁定";
 				$("#statusText").text(statusMsg);
