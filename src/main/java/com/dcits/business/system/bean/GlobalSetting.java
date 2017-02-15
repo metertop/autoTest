@@ -2,16 +2,42 @@ package com.dcits.business.system.bean;
 
 import java.io.Serializable;
 
-public class GlobalSetting implements Serializable{
+/**
+ * 全局设置项
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
+
+public class GlobalSetting implements Serializable {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * id
+	 */
 	private Integer settingId;
+	
+	/**
+	 * 设置名称
+	 */
 	private String settingName;
+	
+	/**
+	 * 设置默认值
+	 */
 	private String defaultValue;
+	
+	/**
+	 * 用户设定值
+	 */
 	private String settingValue;
+	
+	/**
+	 * 备注
+	 */
 	private String mark;
 	
 	public GlobalSetting(String settingName, String defaultValue,
@@ -67,6 +93,12 @@ public class GlobalSetting implements Serializable{
 	public void setMark(String mark) {
 		this.mark = mark;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "GlobalSetting [settingId=" + settingId + ", settingName="
+				+ settingName + ", defaultValue=" + defaultValue
+				+ ", settingValue=" + settingValue + ", mark=" + mark + "]";
+	}
+		
 }

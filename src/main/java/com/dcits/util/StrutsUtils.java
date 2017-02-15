@@ -17,45 +17,57 @@ import com.opensymphony.xwork2.ActionContext;
 
 /**
  * struts2 工具类
- * @author Administrator
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
  *
  */
-public class StrutsUtils{
+
+public class StrutsUtils {
+	
+	private StrutsUtils() {
+		throw new Error("Please don't instantiate me！");
+	}
+	
 	@SuppressWarnings("unchecked")
-	/*
+	/**
 	 * 获取requestMap
+	 * @return
 	 */
-	public static Map<String,Object> getRequestMap(){
+	public static Map<String,Object> getRequestMap() {
 		return (Map<String, Object>)ActionContext.getContext().get("request");
 	}
 	
-	/*
+	/**
 	 * 获取sessionMap
+	 * @return
 	 */
-	public static Map<String,Object> getSessionMap(){
+	public static Map<String,Object> getSessionMap() {
 		return ActionContext.getContext().getSession();
 	}
 	
-	/*
+	/**
 	 * 获取applicationMap
+	 * @return
 	 */
-	public static Map<String,Object> getApplicationMap(){
+	public static Map<String,Object> getApplicationMap() {
 		return ActionContext.getContext().getApplication();
 	}
 	
-	/*
+	/**
 	 * 获取parameterMap
+	 * @return
 	 */
-	public static Map<String,Object> getParametersMap(){
-		//((String[])parameters.get("name"))[0]
+	public static Map<String,Object> getParametersMap() {
 		return ActionContext.getContext().getParameters();
 	}
 	
-	/*
-	 * 获取DT发送的参数
-	 * 
+	/**
+	 * 获取前端Datatables发送的参数
+	 * @return
 	 */
-	public static Map<String,Object> getDTParameters(){
+	@SuppressWarnings("unchecked")
+	public static Map<String,Object> getDTParameters() {
+		
 		Map<String,Object> returnMap = new HashMap<String,Object>();		
 		//排序的那一列位置
 		String orderColumnNum = ServletActionContext.getRequest().getParameter("order[0][column]");
@@ -65,13 +77,15 @@ public class StrutsUtils{
 		String searchValue = ServletActionContext.getRequest().getParameter("search[value]");
 		//需要排序的那一列属性名称
 		String orderDataName = ServletActionContext.getRequest().getParameter("columns["+orderColumnNum+"][data]");
+		
 		//获取当前所有的展示字段
 		Map<String, String[]> params = ServletActionContext.getRequest().getParameterMap();
 		List<String> dataParams = new ArrayList<String>();
-		for(Map.Entry<String, String[]> entry:params.entrySet()){
-			if(entry.getKey().indexOf("][data]")!=-1){
+		
+		for (Map.Entry<String, String[]> entry:params.entrySet()) {
+			if (entry.getKey().indexOf("][data]") != -1) {
 				String a = (params.get(entry.getKey()))[0];
-				if(!a.equals("")){
+				if (!a.equals("")) {
 					dataParams.add(a);
 				}
 			}
@@ -83,44 +97,46 @@ public class StrutsUtils{
 		return returnMap;
 	}
 	
-	/*
+	/**
 	 * 获取actionName
+	 * @return
 	 */
-	public static String getActionName(){
+	public static String getActionName() {
 		return ActionContext.getContext().getName();
 	}
 	
-	/*
+	/**
 	 * 获取spring上下文
-	 * 
+	 * @return
 	 */
-	public static ApplicationContext getApplicationContext(){
+	public static ApplicationContext getApplicationContext() {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		ServletContext sc=request.getSession().getServletContext();
+		ServletContext sc = request.getSession().getServletContext();
 		return WebApplicationContextUtils.getRequiredWebApplicationContext(sc);
 	}
 	
-	/*
-	 * 获取全局设置项
-	 * 
-	 */
+	
 	@SuppressWarnings("unchecked")
-	public static String getSettingValue(String settingKey){
+	/**
+	 * 获取全局设置项
+	 * @param settingKey
+	 * @return
+	 */
+	public static String getSettingValue(String settingKey) {
 		Map<String,GlobalSetting> settingMap = (Map<String, GlobalSetting>) StrutsUtils.getApplicationMap().get("settingMap");
 		GlobalSetting setting = settingMap.get(settingKey);
-		if(setting!=null){
-			return setting.getSettingValue()==null?setting.getDefaultValue():setting.getSettingValue();
-		}else{
-			return null;
+		if (setting != null) {
+			return setting.getSettingValue() == null ? setting.getDefaultValue() : setting.getSettingValue();
 		}
+		return null;
 		
 	}
 	
-	/*
+	/**
 	 * 获取项目根路径
-	 * 
+	 * @return
 	 */
-	public static String getProjectPath(){
+	public static String getProjectPath() {
 		ActionContext ac = ActionContext.getContext();
         ServletContext sc = (ServletContext) ac.get(ServletActionContext.SERVLET_CONTEXT);
         return sc.getRealPath("");

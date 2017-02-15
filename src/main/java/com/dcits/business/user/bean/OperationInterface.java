@@ -6,58 +6,119 @@ import java.util.Set;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class OperationInterface implements Serializable{
+/**
+ * æ“ä½œæ¥å£ä¿¡æ¯pojo
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
+ */
+public class OperationInterface implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * id
+	 */
 	private Integer opId;
+	
+	/**
+	 * åç§°
+	 */
 	private String opName;
+	
+	/**
+	 * è°ƒç”¨å
+	 */
 	private String callName;
+	
+	/**
+	 * æ˜¯å¦ä¸ºçˆ¶èŠ‚ç‚¹
+	 */
 	private String isParent;
-	private String opType;  //ÀàĞÍ  0Îª¾²Ì¬Html×ÊÔ´ÇëÇó  1Îª¶¯Ì¬ÇëÇó
+	
+	/**
+	 * æ“ä½œæ¥å£ç±»å‹
+	 * é€šç”¨æ¥å£ 
+	 */
+	private String opType; 
+	
+	/**
+	 * å¤‡æ³¨
+	 */
 	private String mark;
+	
+	/**
+	 * å½“å‰çŠ¶æ€
+	 */
 	private String status;
+	
+	/**
+	 * çˆ¶èŠ‚ç‚¹
+	 */
 	private OperationInterface oi;
 	
+	/**
+	 * å¯¹åº”çš„è§’è‰²
+	 */
 	private Set<Role> roles=new HashSet<Role>();
 	
+	/**
+	 * å­èŠ‚ç‚¹
+	 */
 	private Set<OperationInterface> ois = new HashSet<OperationInterface>();
 	
-	//ÉèÖÃ½ÇÉ«ÊÇ·ñÓµÓĞ¶ÔÓ¦µÄÈ¨ÏŞ
+	/**
+	 * å±äºæ ‡è®°
+	 */
 	private Boolean isOwn;
 	
-	//¸¸½ÚµãID
+	/**
+	 * çˆ¶èŠ‚ç‚¹id
+	 */
 	public Integer parentOpId;
-	//¸¸½ÚµãÃû³Æ
+	
+	/**
+	 * çˆ¶èŠ‚ç‚¹åç§°
+	 */
 	private String parentOpName;
 	
-/*	//µ±Ç°½ÚµãÏÂ²»ÊÇ¸¸½ÚµãµÄ²Ù×÷½Ó¿Ú¼¯ºÏ
-	private Set<OperationInterface> allOis = new HashSet<OperationInterface>();
-	
-	
-	
-	
-	@JSON(serialize=false)
-	public Set<OperationInterface> getAllOis() {
-		return allOis;
-	}*/
 
-	//Ö»¿¼ÂÇµ½ÁËµ¹ÊıµÚ¶şµÄ¸¸½Úµã,ÍùºóµÄÔÙĞŞ¸Ä
+	/**
+	 * è·å–å½“å‰æ“ä½œæ¥å£çš„æ‰€æœ‰å­æ¥å£
+	 * æš‚æ—¶åªæœ‰ä¸€å±‚çˆ¶èŠ‚ç‚¹
+	 * ä¸ç”¨é€’å½’è·å–
+	 * @return
+	 */
 	@JSON(serialize=false)
 	public Set<OperationInterface> getAllOis() {
 		Set<OperationInterface> ops1 = new HashSet<OperationInterface>();
-		for(OperationInterface op:this.getOis()){
-			if(op.getIsParent().equals("true")){
+		for (OperationInterface op:this.getOis()) {
+			if (op.getIsParent().equals("true")) {
 				ops1.addAll(op.getOis());
-			}else{
+			} else {
 				ops1.add(op);
 			}
 		}
 		return ops1;
 	}
 
+	public OperationInterface(String opName, String callName, String isParent,
+			String mark, String opType,String status, OperationInterface oi) {
+		super();
+		this.opName = opName;
+		this.callName = callName;
+		this.isParent = isParent;
+		this.mark = mark;
+		this.opType = opType;
+		this.status = status;
+		this.oi = oi;
+	}
+
+	public OperationInterface() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	public String getParentOpName() {
 		return parentOpName;
 	}
@@ -157,24 +218,13 @@ public class OperationInterface implements Serializable{
 		this.status = status;
 	}
 
-	
-	public OperationInterface(String opName, String callName, String isParent,
-			String mark, String opType,String status, OperationInterface oi) {
-		super();
-		this.opName = opName;
-		this.callName = callName;
-		this.isParent = isParent;
-		this.mark = mark;
-		this.opType = opType;
-		this.status = status;
-		this.oi = oi;
+	@Override
+	public String toString() {
+		return "OperationInterface [opId=" + opId + ", opName=" + opName
+				+ ", callName=" + callName + ", isParent=" + isParent
+				+ ", opType=" + opType + ", mark=" + mark + ", status="
+				+ status + ", oi=" + oi + "]";
 	}
 
-	public OperationInterface() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	
 	
 }

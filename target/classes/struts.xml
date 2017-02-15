@@ -105,6 +105,9 @@
 			<result type="json">
 				<param name="root">jsonMap</param>
 			</result>
+			<result type="json" name="check">
+				<param name="root">checkNameFlag</param>
+			</result>
 		</action>
 		
 		<!-- 角色管理-->
@@ -113,6 +116,9 @@
 			<interceptor-ref name="myPrepareInterceptorsStack"></interceptor-ref>
 			<result type="json">
 				<param name="root">jsonMap</param>
+			</result>
+			<result type="json" name="check">
+				<param name="root">checkNameFlag</param>
 			</result>
 		</action>
 		

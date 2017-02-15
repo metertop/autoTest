@@ -5,22 +5,61 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class Mail implements Serializable{
+/**
+ * 用户邮件pojo
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
+ */
+public class Mail implements Serializable {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * id
+	 */
 	private Integer mailId;
+	
+	/**
+	 * 接收也用户
+	 */
 	private User receiveUser;
+	
+	/**
+	 * 发送用户
+	 */
 	private User sendUser;
+	
+	/**
+	 * 查看是否需要验证密码
+	 */
 	private String ifValidate;
+	
+	/**
+	 * 消息内容
+	 */
 	private String mailInfo;
+	
+	/**
+	 * 发送状态
+	 */
 	private String sendStatus;
+	
+	/**
+	 * 阅读状态
+	 */
 	private String readStatus;
+	
+	/**
+	 * 发送时间
+	 */
 	private Timestamp sendTime;
 	
+	/**发送用户的用户名*/
 	private String sendUserName;
+	/**接收用户的用户名*/
 	private String receiveUserName;
 	
 	public Mail() {
@@ -49,16 +88,13 @@ public class Mail implements Serializable{
 		return sendTime;
 	}
 
-
 	public void setSendTime(Timestamp sendTime) {
 		this.sendTime = sendTime;
 	}
 
-
 	public String getSendUserName() {
 		return sendUserName;
 	}
-
 
 	public void setSendUserName() {
 		this.sendUserName = "ϵͳ";
@@ -80,90 +116,72 @@ public class Mail implements Serializable{
 		
 	}
 
-
 	public Integer getMailId() {
 		return mailId;
 	}
 
-
 	public void setMailId(Integer mailId) {
 		this.mailId = mailId;
 	}
-
-	
 
 	@JSON(serialize=false)
 	public User getReceiveUser() {
 		return receiveUser;
 	}
 
-
-
-
-
 	public void setReceiveUser(User receiveUser) {
 		this.receiveUser = receiveUser;
 	}
-
-
-
 
 	@JSON(serialize=false)
 	public User getSendUser() {
 		return sendUser;
 	}
 
-
-
-
-
 	public void setSendUser(User sendUser) {
 		this.sendUser = sendUser;
 	}
-
-
-
-
 
 	public String getIfValidate() {
 		return ifValidate;
 	}
 
-
 	public void setIfValidate(String ifValidate) {
 		this.ifValidate = ifValidate;
 	}
-
 
 	public String getMailInfo() {
 		return mailInfo;
 	}
 
-
 	public void setMailInfo(String mailInfo) {
 		this.mailInfo = mailInfo;
 	}
-
 
 	public String getSendStatus() {
 		return sendStatus;
 	}
 
-
 	public void setSendStatus(String sendStatus) {
 		this.sendStatus = sendStatus;
 	}
-
 
 	public String getReadStatus() {
 		return readStatus;
 	}
 
-
 	public void setReadStatus(String readStatus) {
 		this.readStatus = readStatus;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Mail [mailId=" + mailId + ", receiveUser=" + receiveUser
+				+ ", sendUser=" + sendUser + ", ifValidate=" + ifValidate
+				+ ", mailInfo=" + mailInfo + ", sendStatus=" + sendStatus
+				+ ", readStatus=" + readStatus + ", sendTime=" + sendTime
+				+ ", sendUserName=" + sendUserName + ", receiveUserName="
+				+ receiveUserName + "]";
+	}		
 	
 }

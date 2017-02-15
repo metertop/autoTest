@@ -8,27 +8,33 @@ import com.dcits.business.base.dao.impl.BaseDaoImpl;
 import com.dcits.business.message.bean.Parameter;
 import com.dcits.business.message.dao.ParameterDao;
 
+/**
+ * 接口参数Dao接口实现
+ * 
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
+
 @Repository("parameterDao")
-public class ParameterDaoImpl extends BaseDaoImpl<Parameter> implements ParameterDao{
+public class ParameterDaoImpl extends BaseDaoImpl<Parameter> implements ParameterDao {
 	
-	/**
-	 * 根据interfaceId查找入参
-	 * @param interfaceId
-	 * @return
-	 */
-	public List<Parameter> findByInterfaceId(int interfaceId){
-		return getSession().createQuery("from Parameter where interfaceInfo.interfaceId= :interfaceId").setInteger("interfaceId", interfaceId).list();
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Parameter> findByInterfaceId(int interfaceId) {
+		return getSession().createQuery("from Parameter where interfaceInfo.interfaceId= :interfaceId")
+				.setInteger("interfaceId", interfaceId)
+				.list();
 	}
 
-	/**
-	 * 更改某一个属性值
-	 * @param parameterId
-	 * @param attrName
-	 * @param attrValue
-	 */
-	public void editProperty(int parameterId,String attrName,String attrValue) {
-		String hsql = "update Parameter p set "+attrName+"= :attrValue where p.parameterId= :parameterId";
-		getSession().createQuery(hsql).setString("attrValue", attrValue).setInteger("parameterId",parameterId).executeUpdate();		
+	@Override
+	public void editProperty(int parameterId, String attrName, String attrValue) {
+		String hql = "update Parameter p set " + attrName + "= :attrValue "
+				+ "where p.parameterId= :parameterId";
+		
+		getSession().createQuery(hql)
+			.setString("attrValue", attrValue)
+			.setInteger("parameterId",parameterId)
+			.executeUpdate();		
 	}
 	
 }

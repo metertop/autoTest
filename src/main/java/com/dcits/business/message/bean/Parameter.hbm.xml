@@ -19,6 +19,9 @@
         <property name="defaultValue" type="java.lang.String">
             <column name="default_value" length="256" />
         </property>
+        <property name="path" type="java.lang.String">
+            <column name="path" length="256" />
+        </property>
         <property name="type" type="java.lang.String">
             <column name="type" length="50" />
         </property>

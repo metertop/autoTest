@@ -2,18 +2,49 @@ package com.dcits.business.system.bean;
 
 import java.io.Serializable;
 
-public class DataDB implements Serializable{
+/**
+ * 测试查询用数据信息
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
+
+public class DataDB implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 
+	 * id
 	 */
-	private static final long serialVersionUID = 1L;
 	private Integer dbId;
+	
+	/**
+	 * 数据库类型 目前仅支持mysql和oracle
+	 */
 	private String dbType;
+	
+	/**
+	 * 连接地址
+	 */
 	private String dbUrl;
+	
+	/**
+	 * 数据库名
+	 */
 	private String dbName;
+	
+	/**
+	 * 数据库连接用户名
+	 */
 	private String dbUsername;
+	
+	/**
+	 * 数据库密码
+	 */
 	private String dbPasswd;
+	
+	/**
+	 * 备注
+	 */
 	private String dbMark;
 	
 	public DataDB(Integer dbId, String dbType, String dbUrl, String dbName,

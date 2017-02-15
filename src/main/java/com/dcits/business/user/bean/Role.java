@@ -10,25 +10,50 @@ import org.apache.struts2.json.annotations.JSON;
 
 
 /**
- * Role entity. @author MyEclipse Persistence Tools
+ * 角色信息pojo
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
  */
 
-public class Role implements Serializable{
+public class Role implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * id
+	 */
 	private Integer roleId;
+	
+	/**
+	 * 角色组
+	 * 默认
+	 */
 	private String roleGroup;
+	
+	/**
+	 * 角色名
+	 */
 	private String roleName;
+	
+	/**
+	 * 备注
+	 */
 	private String mark;
 	
+	/**
+	 * 拥有的操作接口
+	 */
 	private Set<OperationInterface> ois=new HashSet<OperationInterface>();
 	
+	/**
+	 * 对应用户
+	 */
 	private Set<User> users = new HashSet<User>();
 	
-	
+	/**
+	 * 拥有的权限个数
+	 */
+	private Integer oiNum;
 	
 	@JSON(serialize=false)
 	public Set<User> getUsers() {
@@ -36,9 +61,7 @@ public class Role implements Serializable{
 	}
 	public void setUsers(Set<User> users) {
 		this.users = users;
-	}
-	//��ǰӵ�е�Ȩ�޸���
-	private Integer oiNum;
+	}	
 		
 	public Integer getOiNum() {
 		return oiNum;
@@ -87,4 +110,9 @@ public class Role implements Serializable{
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	@Override
+	public String toString() {
+		return "Role [roleId=" + roleId + ", roleGroup=" + roleGroup
+				+ ", roleName=" + roleName + ", mark=" + mark + "]";
+	}	
 }

@@ -7,22 +7,72 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.dcits.business.user.bean.User;
 
-public class InterfaceMock implements Serializable{
+/**
+ * 接口自动化
+ * 本地接口mock信息
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ *
+ */
+public class InterfaceMock implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	/**
+	 * id
+	 */
+	private Integer mockId;
+	
+	/**
+	 * mock接口名称
+	 */
+	private String interfaceName;
+	
+	/**
+	 * mock地址 默认 /mock/接口名
+	 * 完整地址需要结合配置信息表中的home值
+	 */
+	private String mockUrl;
+	
+	/**
+	 * 请求报文
+	 */
+	private String requestJson;
+	
+	/**
+	 * 默认返回报文
+	 */
+	private String responseJson;
+	
+	/**
+	 * 创建时间
+	 */
+	private Timestamp createTime;
+	
+	/**
+	 * 创建用户
+	 */
+	private User user;
+	
+	/**
+	 * 是否对入参节点进行验证
+	 */
+	private String ifValidate;
+	
+	/**
+	 * 调用次数
+	 */
+	private Integer callCount;
+	
+	/**
+	 * 当前状态
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-	private Integer mockId;
-	private String interfaceName;
-	private String mockUrl;
-	private String requestJson;
-	private String responseJson;
-	private Timestamp createTime;
-	private User user;
-	private String ifValidate;
-	private Integer callCount;
 	private String status;
 	
+	/**
+	 * 创建用户名
+	 */
 	private String createUserName;
 	
 	public InterfaceMock(String interfaceName, String mockUrl,
@@ -40,31 +90,22 @@ public class InterfaceMock implements Serializable{
 		this.status = status;
 	}
 
-	
-	
+
 	public Integer getCallCount() {
 		return callCount;
 	}
-
-
 
 	public void setCallCount(Integer callCount) {
 		this.callCount = callCount;
 	}
 
-
-
 	public String getCreateUserName() {
 		return createUserName;
 	}
 
-
-
 	public void setCreateUserName() {
 		this.createUserName = user.getRealName();
 	}
-
-
 
 	public InterfaceMock() {
 		super();
@@ -145,6 +186,17 @@ public class InterfaceMock implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+
+	@Override
+	public String toString() {
+		return "InterfaceMock [mockId=" + mockId + ", interfaceName="
+				+ interfaceName + ", mockUrl=" + mockUrl + ", requestJson="
+				+ requestJson + ", responseJson=" + responseJson
+				+ ", createTime=" + createTime + ", user=" + user
+				+ ", ifValidate=" + ifValidate + ", callCount=" + callCount
+				+ ", status=" + status + ", createUserName=" + createUserName
+				+ "]";
+	}
 	
 }

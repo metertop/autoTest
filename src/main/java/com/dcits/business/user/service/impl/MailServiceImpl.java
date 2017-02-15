@@ -8,8 +8,14 @@ import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.user.bean.Mail;
 import com.dcits.business.user.service.MailService;
 
+/**
+ * 用户邮件Service接口实现
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
+ */
+
 @Service("mailService")
-public class MailServiceImpl extends BaseServiceImpl<Mail> implements MailService{
+public class MailServiceImpl extends BaseServiceImpl<Mail> implements MailService {
 
 	@Override
 	public int getNoReadNum(Integer receiveUserId) {

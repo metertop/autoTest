@@ -42,7 +42,7 @@ last_login_time datetime,
 if_new char(1)
 );
 alter table at_user add constraint at_user_fk_role_id foreign key(role_id) REFERENCES at_role(role_id);
-INSERT INTO `at_user` (`user_id`, `username`, `real_name`, `password`, `role_id`, `create_time`, `status`, `last_login_time`, `if_new`) VALUES (2, 'admin', '超级管理员', '6de56f9aad7db084b730f719d0874175', 1, '2016-09-18 14:36:06', '0', '2016-12-01 11:41:39', '1');
+INSERT INTO `at_user` (`user_id`, `username`, `real_name`, `password`, `role_id`, `create_time`, `status`, `last_login_time`, `if_new`) VALUES (1, 'admin', '超级管理员', '6de56f9aad7db084b730f719d0874175', 1, '2016-09-18 14:36:06', '0', '2016-12-01 11:41:39', '1');
 
 
 
@@ -129,6 +129,7 @@ parameter_id int auto_increment primary key,
 parameter_identify varchar(120) not null,
 parameter_name varchar(120),
 default_value varchar(256),
+path varchar(256),
 type varchar(50),
 interface_id int
 );

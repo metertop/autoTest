@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dcits.business.base.bean.PageModel;
@@ -31,13 +32,15 @@ import com.dcits.business.user.dao.UserDao;
 
 /**
  * 通用service实现类
- * @author dcits
- *
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
  * @param <T>
  */
 public class BaseServiceImpl<T> implements BaseService<T>{
 	
-	private Class clazz=null;
+	private Class clazz = null;
+	
+	private static final Logger LOGGER = Logger.getLogger(BaseServiceImpl.class.getName());
 	
 	protected BaseDao<T> baseDao;
 	
@@ -76,32 +79,44 @@ public class BaseServiceImpl<T> implements BaseService<T>{
 	@Autowired
 	protected TestSetDao testSetDao;
 	
+	/**
+	 * 通过反射获取传入的类
+	 */
 	public BaseServiceImpl(){
 		ParameterizedType type=(ParameterizedType)this.getClass().getGenericSuperclass();
 		clazz=(Class)type.getActualTypeArguments()[0];
 	}
 
 	/**
-	 * 这个方法会在构造函数和spring以来注入之后执行
+	 * 这个方法会在构造函数和spring注入之后执行
 	 * @Title: init
 	 * @Description: TODO(通过反射来实例化baseDao)
-	 * @param @throws Exception 设定文件
-	 * @return void 返回类型
+	 * @param @throws Exception 
+	 * @return void 
+	 * @throws Exception 
 	 */
 	@PostConstruct
-	public void init() throws Exception
-	{
+	public void init() throws Exception{
 		// 根据相应的clazz,吧相应  ****Dao 赋值给BaseDao即可
 		// 1: 获取当前clazz的类型,然后获取相应的类名称
 		String clazzName = clazz.getSimpleName();
 		// 2:Account===>account===>account+Dao  Category====>CategoryDao
 		String clazzDaoName = clazzName.substring(0,1).toLowerCase() + clazzName.substring(1) + "Dao";//toLowerCase首字母小写
 		// 3: 通过clazzDaoName获取相应 Field字段    this.getClass().getSuperclass():获取到相应BaseServiceImpl
-		Field daoNameField = this.getClass().getSuperclass().getDeclaredField(clazzDaoName);
-		Object object = daoNameField.get(this);
-		// 4: 获取baseDao 字段
-		Field baseDaoNameField = this.getClass().getSuperclass().getDeclaredField("baseDao");
-		baseDaoNameField.set(this, object);		
+		Field daoNameField;
+		try {
+			daoNameField = this.getClass().getSuperclass().getDeclaredField(clazzDaoName);
+			Object object = daoNameField.get(this);
+			// 4: 获取baseDao 字段
+			Field baseDaoNameField = this.getClass().getSuperclass().getDeclaredField("baseDao");
+			baseDaoNameField.set(this, object);	
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			LOGGER.error("通过反射来实例化指定dao失败" + e.getMessage(), e);
+			throw new Exception();
+		}
+			
 	}
 	
 	@Override

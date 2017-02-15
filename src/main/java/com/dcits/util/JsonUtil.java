@@ -14,7 +14,9 @@ import org.codehaus.jackson.map.ObjectMapper;
  *  通用多层json递归解析。在没有Object对象，或是极度复杂的多级嵌套json，情况下以类的方式，直接获取结果。
  *  支持String、Map、ArrayList、ArrayMap四种返回对象的数据获取
  *  使用方式：根据json层级关系直接使用: 基节点.子节点.孙节点
- *  @author ww
+ *  @author dcits
+ *  @version 1.0.0.0,2017.2.14
+ *  
  */
 
 @SuppressWarnings("rawtypes")
@@ -22,40 +24,44 @@ public class JsonUtil {
  
     //private static String jsonStr = "{\"ROOT\":{\"PHONE_NO\": \"18755189818\",\"LOGIN_NO\":\"A0AAA0021\",\"CHANNEL_TYPE\": \"1000\",\"ROUTE_NO\": \"18755189818\"}}";
     private static ObjectMapper mapper = new ObjectMapper();
+
+    private JsonUtil() {
+    	throw new Error("Please don't instantiate me！");
+    }
     
     /**
-     * 根据输入的json串获取指定的节点信息
-     * mode=1,返回包含所有节点名称的list
-     * mode=0,返回包含所有节点的类型的list
-     * mode=2,返回key为节点名称,value为节点值的map
-     * mode=3,返回包含所有的map
+     * 根据输入的json串获取指定的节点信息<br>
+     * mode=0,返回包含所有节点的类型的list<br>
+     * mode=1,返回包含所有节点名称的list<br>
+     * mode=2,返回key为节点名称,value为节点值的map<br>
+     * mode=4，返回包含所有节点的路径的list<br>
+     * mode=3,返回包含所有信息的map<br>
      * @param jsonStr
      * @param mode
      * @return
      */
-    public static Object getJsonList(String jsonStr,int mode){
-    	//返回的都是子节点的map或者list
-    	//mode为1=list,2=map
-    	Map<String,String> jsonTreeMap=new HashMap<String,String>();
-    	List<String> jsonTreeList=new ArrayList<String>();
-    	List<String> jsonTreeType=new ArrayList<String>();
+    public static Object getJsonList(String jsonStr,int mode) throws Exception{
     	
-    	try {
-			Map maps = mapper.readValue(jsonStr, Map.class);
-			viewJsonTree(maps,jsonTreeMap,jsonTreeList,jsonTreeType);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			return null;
-		} 
-		if(mode==1){
+    	//返回的都是子节点的map或者list
+    	Map<String,String> jsonTreeMap = new HashMap<String,String>();
+    	
+    	List<String> jsonTreeList = new ArrayList<String>();
+    	List<String> jsonTreeType = new ArrayList<String>();
+    	List<String> jsonTreePath = new ArrayList<String>();
+    	
+		Map maps = mapper.readValue(jsonStr, Map.class);
+		viewJsonTree(maps, jsonTreeMap, jsonTreeList, jsonTreeType, jsonTreePath, "TopRoot");
+		
+		if (mode == 1) {
 			return jsonTreeList;
-		}else if(mode==2){
+		} else if(mode == 2) {
 			return jsonTreeMap;
-		}else if(mode==0){
+		} else if (mode == 0) {
 			return jsonTreeType;			
-		}else{
-			Object a[] = {jsonTreeList,jsonTreeType,jsonTreeMap};
+		} else if (mode == 4) {
+			return jsonTreePath;
+		} else {
+			Object[] a = { jsonTreeList,jsonTreeType,jsonTreePath,jsonTreeMap };
 			return a;
 		}
         
@@ -63,75 +69,125 @@ public class JsonUtil {
     
 
     
-    /** 复杂嵌套Map转Json  */
-    public static String getObjectByJson(Object obj){
+    /**
+     * 复杂嵌套Map转Json
+     * @param obj
+     * @return 返回转换的json串
+     * @throws Exception
+     */
+    public static String getObjectByJson(Object obj) throws Exception {
         String str = "";
         try {
             str = mapper.writeValueAsString(obj);
         } catch (Exception e) {
-            System.out.println("###[Error] getObjectToJson() "+e.getMessage());
+            //System.out.println("###[Error] getObjectToJson() "+e.getMessage());
+        	e.printStackTrace();
+            throw new Exception();
         }
         return str;
     }
-    /** 复杂嵌套Json层级展示  */
     
-	public static Object viewJsonTree(Object m,Map<String,String> jsonTreeMap,List<String> jsonTreeList,List<String> jsonTreeType){
-        if(m == null){ return null;}  
-        try {
-            Map mp = null;
-            List ls = null;
-            if(m instanceof Map || m instanceof LinkedHashMap){
-                mp = (LinkedHashMap)m;
-                for(Iterator ite = mp.entrySet().iterator(); ite.hasNext();){  
-                    Map.Entry e = (Map.Entry) ite.next();  
-                    if(e.getValue() instanceof String){
-                        //System.out.println("[String]"+e.getKey()+" | " + e.getValue());
-                        jsonTreeMap.put(e.getKey().toString(),e.getValue().toString());
-                        jsonTreeList.add(e.getKey().toString()); 
-                        jsonTreeType.add("String");
-                    }else if(e.getValue() instanceof LinkedHashMap){
-                        //System.out.println("{Map}"+ e.getKey()+" | "+e.getValue());
-                    	jsonTreeList.add(e.getKey().toString());
-                    	jsonTreeMap.put(e.getKey().toString(),"");
-                    	jsonTreeType.add("Map");
-                        viewJsonTree(e.getValue(),jsonTreeMap,jsonTreeList,jsonTreeType);
-                    }else if(e.getValue() instanceof ArrayList){
-                        //System.out.println("[Array]"+ e.getKey()+" | "+e.getValue());
-                    	jsonTreeList.add(e.getKey().toString());
-                    	jsonTreeMap.put(e.getKey().toString(),"");
-                    	jsonTreeType.add("Array");
-                        viewJsonTree(e.getValue(),jsonTreeMap,jsonTreeList,jsonTreeType);
-                    }else if(e.getValue() instanceof Number){
-                    	jsonTreeList.add(e.getKey().toString());
-                    	jsonTreeMap.put(e.getKey().toString(),String.valueOf(e.getValue()));
-                    	jsonTreeType.add("Number");
-                        viewJsonTree(e.getValue(),jsonTreeMap,jsonTreeList,jsonTreeType);
-                    }
-                }     
-            }
-            if(m instanceof List || m instanceof ArrayList){
-                ls = (ArrayList)m;
-                for(int i=0;i<ls.size();i++){
-                    if(ls.get(i) instanceof LinkedHashMap){
-                        viewJsonTree(ls.get(i),jsonTreeMap,jsonTreeList,jsonTreeType);
-                    }else if(ls.get(i) instanceof ArrayList){
-                        viewJsonTree(ls.get(i),jsonTreeMap,jsonTreeList,jsonTreeType);
-                    }   
-                }
-            }   
-            //System.out.println();
-        } catch (Exception e) {
-            //System.out.println("###[Error] viewJsonTree() "+e.getMessage());
-        	return null;
-        }
-        return null;
+    /**
+     * 复杂嵌套Json层级展示
+     *    
+     * @param m
+     * @param jsonTreeMap
+     * @param jsonTreeList
+     * @param jsonTreeType
+     * @param jsonTreePath
+     * @param parentName
+     * @return
+     * @throws Exception
+     */
+	public static void viewJsonTree(Object m, Map<String,String> jsonTreeMap, List<String> jsonTreeList
+			, List<String> jsonTreeType,List<String> jsonTreePath,String parentName) 
+					throws Exception {
+        if (m != null) {
+	        try {
+	            Map mp = null;
+	            List ls = null;
+	            
+	            if (m instanceof Map || m instanceof LinkedHashMap) {
+	                mp = (LinkedHashMap)m;
+	                
+	                for (Iterator ite = mp.entrySet().iterator(); ite.hasNext();){  
+	                	
+	                    Map.Entry e = (Map.Entry) ite.next();  
+	                    
+	                    if (e.getValue() instanceof String) {
+	                    	
+	                        jsonTreeMap.put(e.getKey().toString(), e.getValue().toString());
+	                        jsonTreeList.add(e.getKey().toString()); 
+	                        jsonTreeType.add("String");
+	                        jsonTreePath.add(parentName);
+	                        
+	                    } else if (e.getValue() instanceof ArrayList || e.getValue() instanceof LinkedHashMap) {
+	                    	
+	                    	jsonTreeList.add(e.getKey().toString());
+	                    	jsonTreeMap.put(e.getKey().toString(),"");
+	                    	
+	                    	if (e.getValue() instanceof ArrayList) {
+	                    		jsonTreeType.add("Array");
+	                    	} else {
+	                    		jsonTreeType.add("Map");
+	                    	}   
+	                    	
+	                    	String parentNameC = "";
+	                    	
+	                    	if (!parentName.equals("")) {                  		
+	                    		parentNameC = parentName + "." + e.getKey().toString();
+	                    	} else {
+	                    		parentNameC = e.getKey().toString();
+	                    	}
+	                    	
+	                    	jsonTreePath.add(parentName);
+	                    	viewJsonTree(e.getValue(),jsonTreeMap, jsonTreeList, jsonTreeType, jsonTreePath,parentNameC);
+	                    	
+	                    } else if (e.getValue() instanceof Number) {
+	                    	
+	                    	jsonTreeList.add(e.getKey().toString());
+	                    	jsonTreeMap.put(e.getKey().toString(), String.valueOf(e.getValue()));
+	                    	jsonTreeType.add("Number");
+	                    	jsonTreePath.add(parentName);
+	                    	
+	                    } else if (e.getValue() == null){
+	                    	
+	                    	jsonTreeList.add(e.getKey().toString());
+	                    	jsonTreeMap.put(e.getKey().toString(),"null");
+	                    	jsonTreeType.add("Unsureness");
+	                    	jsonTreePath.add(parentName);
+	                    }
+	                }     
+	            }
+	            if (m instanceof List || m instanceof ArrayList){
+	                ls = (ArrayList)m;
+	                for (int i=0;i<ls.size();i++) {
+	                    if (ls.get(i) instanceof LinkedHashMap || ls.get(i) instanceof ArrayList) {
+	                        viewJsonTree(ls.get(i), jsonTreeMap, jsonTreeList, jsonTreeType, jsonTreePath,parentName);
+	                    }   
+	                }
+	            }   
+	
+	        } catch (Exception e) {
+	            //System.out.println("###[Error] viewJsonTree() "+e.getMessage());
+	        	e.printStackTrace();        	
+	        	throw new Exception();        	
+	        }
+        }  
     }   
      
      
     private static int i = 0;
-    /** 复杂嵌套Json获取Object数据  */
-   
-	public static String getObjectByJson(String jsonStr,String argsPath,TypeEnum argsType){
+    
+    /**
+     * 复杂嵌套Json获取Object数据
+     * 
+     * @param jsonStr
+     * @param argsPath
+     * @param argsType
+     * @return
+     */
+	public static String getObjectByJson(String jsonStr,String argsPath,TypeEnum argsType) {
         if(argsPath == null || argsPath.equals("") || argsType == null){return null;}
          
         Object obj = null;
@@ -156,19 +212,25 @@ public class JsonUtil {
             }
         } catch (Exception e) {
         	e.printStackTrace();
-            System.out.println("###[Error] getObjectByJson() "+e.getMessage());
+            //System.out.println("###[Error] getObjectByJson() "+e.getMessage());
             return null;
         }
         i = 0;
-        if(obj!=null){
+        if (obj!=null) {
         	return obj.toString();
-        }else{
+        } else {
         	return null;
         }
         
     }
-    //递归获取object
-	private static Object getObject(Object m,String key,TypeEnum type){
+    /**
+     * 递归获取object
+     * @param m
+     * @param key
+     * @param type
+     * @return
+     */
+	private static Object getObject(Object m,String key,TypeEnum type) {
         if(m == null){return null;}
         Object o = null;
         Map mp = null;
@@ -254,10 +316,10 @@ public class JsonUtil {
     }
      
      
-    /*
+    /**
      * Json数据解析返回数据类型枚举
      */
-    public enum TypeEnum{
+    public enum TypeEnum {
         /** 单纯的键值对，通过key获取valus */
         string,
         /** 通过key获取到Map对象 */

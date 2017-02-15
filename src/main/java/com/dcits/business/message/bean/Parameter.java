@@ -10,24 +10,52 @@ import org.apache.struts2.json.annotations.JSON;
 
 
 /**
- * Parameter entity. @author MyEclipse Persistence Tools
+ * 接口自动化
+ * 接口参数信息表
+ * 
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
  */
 
-public class Parameter implements Serializable{
+public class Parameter implements Serializable {
 
-
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	// Fields    
-
-     private Integer parameterId;
-     private String parameterIdentify;
-     private String parameterName;
-     private String defaultValue;
-     private String type;
-     private InterfaceInfo interfaceInfo;
+	
+	/**
+	 * id
+	 */
+	private Integer parameterId;
+	
+	/**
+	 * 参数标识
+	 */
+	private String parameterIdentify;
+	
+	/**
+	 * 参数名
+	 */
+	private String parameterName;
+	
+	/**
+	 * 默认值
+	 */
+	private String defaultValue;
+	
+	/**
+	 * 类型
+	 */
+	private String type;
+	
+	/**
+	 * 路径
+	 */
+	private String path;
+	
+	/**
+	 * 所属接口
+	 */
+	private InterfaceInfo interfaceInfo;
 
      
     // Constructors
@@ -42,21 +70,33 @@ public class Parameter implements Serializable{
     }
     
     /** full constructor */
-    public Parameter(String parameterIdentify, String parameterName, String defaultValue, String type , Integer interfaceId) {
+    public Parameter(String parameterIdentify, String parameterName, String defaultValue, String path,String type) {
         this.parameterIdentify = parameterIdentify;
         this.parameterName = parameterName;
-        this.defaultValue = defaultValue;
-        this.interfaceInfo.setInterfaceId(interfaceId);
+        this.defaultValue = defaultValue; 
+        this.path = path;
+        this.type = type;
     }
 
    
     // Property accessors
+    
+    
+    
 
     public Integer getParameterId() {
         return this.parameterId;
     }
     
-    public void setParameterId(Integer parameterId) {
+    public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setParameterId(Integer parameterId) {
         this.parameterId = parameterId;
     }
 

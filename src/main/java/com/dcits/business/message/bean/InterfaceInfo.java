@@ -12,7 +12,11 @@ import com.dcits.business.user.bean.User;
 
 
 /**
- * InterfaceInfo entity. @author MyEclipse Persistence Tools
+ * 接口自动化
+ * 接口信息表
+ * 
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
  */
 
 public class InterfaceInfo implements Serializable{
@@ -20,23 +24,72 @@ public class InterfaceInfo implements Serializable{
 
     // Fields    
 
-     /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 接口id
+	 */
 	private Integer interfaceId;
-     private User user;
-     private String interfaceName;
-     private String interfaceCnName;
-     private String requestUrlMock;
-     private String requestUrlReal;
-     private String interfaceType;
-     private Timestamp createTime;
-     private String status;
-     private String lastModifyUser;
-     
-     private Set<Parameter> parameters=new HashSet<Parameter>();
-     private Set<Message> messages=new HashSet<Message>();
+	
+	/**
+	 * 创建用户
+	 */
+	private User user;
+	
+	/**
+	 * 接口名称，必须为英文
+	 */
+	private String interfaceName;
+	
+	/**
+	 * 接口中文名
+	 */
+	private String interfaceCnName;
+	
+	/**
+	 * 模拟请求地址
+	 */
+	private String requestUrlMock;
+	
+	/**
+	 * 真实请求地址
+	 */
+	private String requestUrlReal;
+	
+	/**
+	 * 接口类型
+	 * CX 查询类
+	 * SL 受理类
+	 */
+	private String interfaceType;
+	
+	/**
+	 * 创建时间
+	 */
+	private Timestamp createTime;
+	
+	/**
+	 * 当前状态
+	 * 0 可用
+	 * 1 不可用
+	 */
+	private String status;
+	
+	/**
+	 * 最后一次修改用户的realName
+	 */
+	private String lastModifyUser;
+    
+	
+	/**
+	 * 当前接口下的参数
+	 */
+	private Set<Parameter> parameters=new HashSet<Parameter>();
+	
+	/**
+	 * 当前接口下的报文
+	 */
+	private Set<Message> messages=new HashSet<Message>();
     // Constructors
 
     /** default constructor */
@@ -63,10 +116,6 @@ public class InterfaceInfo implements Serializable{
 
    
     // Property accessors
-    
-    
-    
-    
     
     public Integer getInterfaceId() {
         return this.interfaceId;
@@ -168,14 +217,15 @@ public class InterfaceInfo implements Serializable{
         this.lastModifyUser = lastModifyUser;
     }
 
-
-   
-    
-
-
-
-
-
-
+	@Override
+	public String toString() {
+		return "InterfaceInfo [interfaceId=" + interfaceId + ", user=" + user
+				+ ", interfaceName=" + interfaceName + ", interfaceCnName="
+				+ interfaceCnName + ", requestUrlMock=" + requestUrlMock
+				+ ", requestUrlReal=" + requestUrlReal + ", interfaceType="
+				+ interfaceType + ", createTime=" + createTime + ", status="
+				+ status + ", lastModifyUser=" + lastModifyUser
+				+ ", parameters=" + parameters + ", messages=" + messages + "]";
+	}
 
 }

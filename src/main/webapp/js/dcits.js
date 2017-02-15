@@ -16,7 +16,7 @@ var btnTextTemplate;
 var btnIconTemplate;
 var formControlTemplate;
 
-var editHtml="";
+var editHtml = "";
 var table;
 
 $(function(){

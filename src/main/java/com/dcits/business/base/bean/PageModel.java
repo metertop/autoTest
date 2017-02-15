@@ -1,39 +1,64 @@
-/**
- * 
- */
 package com.dcits.business.base.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author dcits
- * 分页模型
+ * 基于Datatable服务器处理模式的分页模型
+ * 
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ * @param <T>
  */
 public class PageModel<T> {
 	
-	//当前需要排序的列名称
+	/**
+	 * 当前需要排序的列名称
+	 */
 	private String orderDataName;
-	//排序方式,默认asc
+	
+	/**
+	 * 排序方式,默认asc
+	 */
 	private String orderType = "asc";
-	//全局搜索条件
+	
+	/**
+	 * 全局搜索条件
+	 * 应用到所有的字段属性
+	 */
 	private String searchValue = "";
-	//当前展示的字段名
+	
+	/**
+	 * 当前展示的所有字段名
+	 */
 	private List<String> dataParams = new ArrayList<String>();
-	//当前起始数据的位置
+	
+	/**
+	 * 当前起始数据的位置
+	 */
 	private int dataNo=0;
-	//每页显示的记录数
+	
+	/**
+	 * 每页显示的记录数
+	 */
 	private int pageSize=10;
-	//总记录数
+	
+	/**
+	 * 总记录数
+	 */
 	private int recordCount;
-	//总页数
+	
+	/**
+	 * 总页数
+	 */
 	private int pageCount;
-	//存放分页数据的集合
+	
+	/**
+	 * 存放分页数据的集合
+	 */
 	private List<T> datas;
 	
-	public PageModel(){
-		
-	}
+	public PageModel(){};
 	
 	public PageModel(String orderDataName, String orderType,
 			String searchValue, List<String> dataParams, int dataNo,
@@ -46,12 +71,6 @@ public class PageModel<T> {
 		this.dataNo = dataNo;
 		this.pageSize = pageSize;
 	}
-
-
-
-
-
-
 
 	public List<String> getDataParams() {
 		return dataParams;

@@ -5,8 +5,9 @@ import java.util.List;
 import com.dcits.business.base.bean.PageModel;
 /**
  * 通用DAO接口
- * @author dcits
- *
+ * 
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
  * @param <T>
  */
 
@@ -55,12 +56,16 @@ public interface BaseDao<T> {
 	 */
 	 int totalCount();
 	
-	/**
-	 * 获取分页列表
-	 * @param pageNo 当前页号
-	 * @param pageSize 每页要显示的记录数
-	 * @return 符合分页条件的分页模型实例
-	 */
+	 /**
+	  * 获取分页列表
+	  * @param dataNo 当前数据起始位置
+	  * @param pageSize 每页显示数据量
+	  * @param orderDataName 当前需要排序的列名称
+	  * @param orderType 排序方式
+	  * @param searchValue 全局搜索天剑
+	  * @param dataParams 当前展示的所有字段名
+	  * @return 符合分页条件的分页模型实例
+	  */
 	 PageModel<T> findByPager(int dataNo, int pageSize,String orderDataName,String orderType,String searchValue,List<String> dataParams);
 	
 	/**

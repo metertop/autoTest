@@ -3,6 +3,7 @@ package com.dcits.business.base.dao.impl;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,25 @@ import com.dcits.business.base.bean.PageModel;
 import com.dcits.business.base.dao.BaseDao;
 
 /**
- * @author dcits
  * 通用DAO接口的实现类
+ * 
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ * @param <T>
  */
 @SuppressWarnings("unchecked")
 public class BaseDaoImpl<T> implements BaseDao<T>{
 	
+	/**
+	 * Hibernate sessionFactory
+	 */
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	/**
+	 * LOGGER
+	 */
+	private static final Logger LOGGER = Logger.getLogger(BaseDaoImpl.class.getName());
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -30,9 +42,10 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 	
 	private Class<T> clazz;
 	
-
-	public BaseDaoImpl() {
-		//反射获取传入的类
+	/**
+	 * 通过反射获取传入的类
+	 */
+	public BaseDaoImpl() {		
 		ParameterizedType type=(ParameterizedType)this.getClass().getGenericSuperclass();
 		this.clazz=(Class)type.getActualTypeArguments()[0];	
 	}
@@ -90,7 +103,7 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 		String hql="from "+clazz.getSimpleName();
 		
 		//增加搜索条件
-		if(searchValue!=""){
+		if(searchValue!="") {
 			hql+=" where ";
 			int i = 1;
 			for(String s:dataParams){
@@ -104,12 +117,10 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 		}
 
 		//增加排序
-		if(orderDataName!=""){
+		if(orderDataName!="") {
 			hql += " order by " + orderDataName + " " + orderType;
 		}
-		
-		
-		
+	
 		pm.setDatas(getSession().createQuery(hql).setFirstResult(dataNo).setMaxResults(pageSize).setCacheable(true).list());
 		pm.setRecordCount(totalCount());
 		return pm;
@@ -121,8 +132,7 @@ public class BaseDaoImpl<T> implements BaseDao<T>{
 	}
 
 	public T findUnique(String sql) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 		return (T)getSession().createQuery(sql).uniqueResult();
 	}
 }

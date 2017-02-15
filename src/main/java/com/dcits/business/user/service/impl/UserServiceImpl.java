@@ -7,8 +7,15 @@ import org.springframework.stereotype.Service;
 import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.user.bean.User;
 import com.dcits.business.user.service.UserService;
+
+/**
+ * 用户信息Service接口实现
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
+ */
+
 @Service("userService")
-public class UserServiceImpl extends BaseServiceImpl<User> implements UserService{
+public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
 
 	@Override
 	public User login(String userName, String passWord) {
@@ -30,10 +37,10 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
 	@Override
 	public User validateUsername(String username, Integer userId) {		
-		if(userId==null){
+		if (userId==null) {
 			return userDao.validateUsername(username);
 		}
-		return userDao.validateUsername(username,userId);
+		return userDao.validateUsername(username, userId);
 	}
 
 	@Override

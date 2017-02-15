@@ -12,7 +12,10 @@ import com.dcits.business.user.bean.User;
 
 
 /**
- * Message entity. @author MyEclipse Persistence Tools
+ * 接口自动化
+ * 接口下的报文格式信息
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
  */
 
 public class Message implements Serializable{
@@ -20,28 +23,47 @@ public class Message implements Serializable{
 
     // Fields    
 
-     /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**报文id*/
 	private Integer messageId;
-     private InterfaceInfo interfaceInfo;
-     private User user;
-     private Parameter parameter;
-     private String messageName;
-     private String requestUrl;
-     private Timestamp createTime;
-     private String status;
-     private String lastModifyUser;
-     private String parameterJson;
+	
+	/**所属接口*/
+	private InterfaceInfo interfaceInfo;
+	
+	/**创建用户*/
+	private User user;
+	
+	/**该字段废弃*/
+	private Parameter parameter;
+	
+	/**报文名*/
+	private String messageName;
+	
+	/**请求地址*/
+	private String requestUrl;
+	
+	/**创建时间*/
+	private Timestamp createTime;
+	
+	/**当前状态*/
+	private String status;
+	
+	/**最后一次修改的用户realName*/
+	private String lastModifyUser;
+	
+	/**完整入参报文*/
+	private String parameterJson;
 
-     private Set<MessageScene> scenes = new HashSet<MessageScene>();
+	/**所有的场景*/
+	private Set<MessageScene> scenes = new HashSet<MessageScene>();
      
-     private String interfaceName;
+	
+	private String interfaceName;
+    	
+	private String createUserName;
      
-     private String createUserName;
-     
-     @SuppressWarnings("unused")
+    @SuppressWarnings("unused")
 	private Integer sceneNum = this.getSceneNum();
 
     // Constructors

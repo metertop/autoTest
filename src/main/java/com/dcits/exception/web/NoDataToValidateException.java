@@ -1,10 +1,13 @@
 package com.dcits.exception.web;
 
-public class NoDataToValidateException extends RuntimeException{
+/**
+ * Web自动化相关
+ * 没有足够的数据来进行结果验证
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
+public class NoDataToValidateException extends RuntimeException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public NoDataToValidateException() {

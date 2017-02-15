@@ -1,10 +1,14 @@
 package com.dcits.exception.web;
 
+
+/**
+ * Web自动化相关
+ * 
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
 public class NoRequireValueException extends RuntimeException{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public NoRequireValueException() {

@@ -149,7 +149,7 @@ function layer_show(title,url,w,h,type,success){
 	if (type == null || type == '') {
 		type = 2;
 	}
-	layer.open({
+	index = layer.open({
 		type: type,
 		area: [w+'px', h +'px'],
 		fix: false, //不固定
@@ -159,6 +159,7 @@ function layer_show(title,url,w,h,type,success){
 		content: url,
 		success:success
 	});
+	return index;
 }
 /*关闭弹出框口*/
 function layer_close(){

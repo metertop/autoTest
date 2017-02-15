@@ -8,8 +8,13 @@ import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.message.bean.InterfaceInfo;
 import com.dcits.business.message.service.InterfaceInfoService;
 
+/**
+ * 接口信息Service实现
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
 @Service("interfaceInfoImpl")
-public class InterfaceInfoServiceImpl extends BaseServiceImpl<InterfaceInfo> implements InterfaceInfoService{
+public class InterfaceInfoServiceImpl extends BaseServiceImpl<InterfaceInfo> implements InterfaceInfoService {
 
 	@Override
 	public List<InterfaceInfo> findInterfaceByCondition(String condition) {

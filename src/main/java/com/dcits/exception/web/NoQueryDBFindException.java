@@ -1,10 +1,13 @@
 package com.dcits.exception.web;
 
-public class NoQueryDBFindException extends RuntimeException{
 
-	/**
-	 * 
-	 */
+/**
+ * 找不到指定的查询数据信息
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
+public class NoQueryDBFindException extends RuntimeException {
+
 	private static final long serialVersionUID = 1L;
 
 	public NoQueryDBFindException() {

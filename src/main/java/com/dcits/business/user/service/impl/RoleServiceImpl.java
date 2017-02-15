@@ -6,8 +6,14 @@ import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.user.bean.Role;
 import com.dcits.business.user.service.RoleService;
 
+/**
+ * 角色信息Service接口实现
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
+ */
+
 @Service("roleService")
-public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleService{
+public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleService {
 
 	@Override
 	public Role get(String roleName) {
@@ -28,7 +34,4 @@ public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleServic
 		roleDao.changeUserRole(roleId);
 		roleDao.delete(roleId);		
 	}
-	
-	
-
 }

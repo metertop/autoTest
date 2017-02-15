@@ -6,17 +6,24 @@ import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.system.bean.DataDB;
 import com.dcits.business.system.service.DataDBService;
 
+/**
+ * 查询用数据库信息Service实现类
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.13
+ */
+
 @Service("dataDBService")
-public class DataDBServiceImpl extends BaseServiceImpl<DataDB> implements DataDBService{
+public class DataDBServiceImpl extends BaseServiceImpl<DataDB> implements DataDBService {
 	/**
 	 * 自定义dbId
 	 * @return
 	 */
-	public Integer getMaxDBId(){
+	@Override
+	public Integer getMaxDBId() {
 		DataDB db = dataDBDao.getMaxDBId();
-		if(db==null){
+		if (db==null) {
 			return 9999990;
-		}else{
+		} else {
 			return db.getDbId()+1;
 		}
 	}

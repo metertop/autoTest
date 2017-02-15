@@ -16,43 +16,48 @@ import com.dcits.business.system.service.GlobalSettingService;
 import com.dcits.business.user.bean.OperationInterface;
 import com.dcits.business.user.service.OperationInterfaceService;
 
+
 /**
  * 初始化Web操作-加载当前操作接口列表、加载网站全局设置
- * @author Administrator
- *
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
  */
-public class InitWebListener implements ServletContextListener{
+
+public class InitWebListener implements ServletContextListener {
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
+		
 		ServletContext context = arg0.getServletContext();
-		  //取得appliction上下文
-		ApplicationContext ctx =WebApplicationContextUtils.
-		getRequiredWebApplicationContext(context);
-		  //取得特定bean
+		//取得appliction上下文
+		ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(context);
+		//取得指定bean
 		OperationInterfaceService opService =(OperationInterfaceService)ctx.getBean("operationInterfaceService");
 		GlobalSettingService settingService = (GlobalSettingService) ctx.getBean("globalSettingService");
+		
 		//获取当前系统的所有接口信息  
 		List<OperationInterface> ops = opService.findAll();
-		for(OperationInterface op:ops){
+		for (OperationInterface op:ops) {
 			op.setParentOpId();
 		}
+		//放置到全局context中
 		context.setAttribute("ops", ops);
 		
 		//获取网站全局设置信息
 		List<GlobalSetting> settings = settingService.findAll();
 		Map<String,GlobalSetting> globalSettingMap = new HashMap<String,GlobalSetting>();
-		for(GlobalSetting g:settings){
+		
+		for (GlobalSetting g:settings) {
 			globalSettingMap.put(g.getSettingName(), g);
 		}
-		context.setAttribute("settingMap", globalSettingMap);		
-		
+		//放置到全局context中
+		context.setAttribute("settingMap", globalSettingMap);				
 	}
 	
 }

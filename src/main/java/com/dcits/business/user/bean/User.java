@@ -9,27 +9,63 @@ import org.apache.struts2.json.annotations.JSON;
 
 
 /**
- * User entity. @author MyEclipse Persistence Tools
+ * 用户信息pojo
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.2.14
  */
 
-public class User implements Serializable{
+public class User implements Serializable {
 
 
     // Fields    
 
-     /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * id
+	 */
 	private Integer userId;
-     private Role role;
-     private String username;
-     private String password;
-     private Date createTime;
-     private String status;
-     private Timestamp lastLoginTime;
-     private String ifNew;
-     private String realName;
+	
+	/**
+	 * 角色
+	 */
+	private Role role;
+	
+	/**
+	 * 用户名
+	 */
+	private String username;
+	
+	/**
+	 * 密码
+	 */
+	private String password;
+	
+	/**
+	 * 创建时间
+	 */
+	private Date createTime;
+	
+	/**
+	 * 当前状态
+	 */
+	private String status;
+	
+	/***
+	 * 最后登录
+	 */
+	private Timestamp lastLoginTime;
+	
+	/**
+	 * 是否为新员工
+	 * 暂时未用
+	 */
+	private String ifNew;
+	
+	/**
+	 * 真实名
+	 */
+	private String realName;
 
 
     // Constructors
@@ -134,4 +170,15 @@ public class User implements Serializable{
     public String getRealName() {
 		return realName;
 	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", role=" + role + ", username="
+				+ username + ", password=" + password + ", createTime="
+				+ createTime + ", status=" + status + ", lastLoginTime="
+				+ lastLoginTime + ", ifNew=" + ifNew + ", realName=" + realName
+				+ "]";
+	}
+    
+    
 }
