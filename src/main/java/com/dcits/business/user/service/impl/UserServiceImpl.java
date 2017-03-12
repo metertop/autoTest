@@ -2,10 +2,12 @@ package com.dcits.business.user.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.user.bean.User;
+import com.dcits.business.user.dao.UserDao;
 import com.dcits.business.user.service.UserService;
 
 /**
@@ -16,6 +18,14 @@ import com.dcits.business.user.service.UserService;
 
 @Service("userService")
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
+	
+	private UserDao userDao;
+	
+	@Autowired
+	public void setUserDao(UserDao userDao) {
+		super.setBaseDao(userDao);
+		this.userDao = userDao;
+	}
 
 	@Override
 	public User login(String userName, String passWord) {

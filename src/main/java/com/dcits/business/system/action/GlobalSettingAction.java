@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.system.bean.GlobalSetting;
+import com.dcits.business.system.service.GlobalSettingService;
 import com.dcits.constant.ReturnCodeConsts;
 import com.dcits.util.StrutsUtils;
 
@@ -24,6 +26,14 @@ public class GlobalSettingAction extends BaseAction<GlobalSetting>{
 
 	private static final long serialVersionUID = 1L;	
 	
+	private GlobalSettingService globalSettingService;
+	
+	@Autowired
+	public void setGlobalSettingService(GlobalSettingService globalSettingService) {
+		super.setBaseService(globalSettingService);
+		this.globalSettingService = globalSettingService;
+	}
+	
 	/**
 	 * 将设置中字段值为null的转换成""
 	 */
@@ -31,7 +41,7 @@ public class GlobalSettingAction extends BaseAction<GlobalSetting>{
 	public Object processListData(Object o) {
 		List<GlobalSetting> settings = (List<GlobalSetting>) o;
 		for (GlobalSetting g:settings) {
-			if (g.getSettingValue()==null) {
+			if (g.getSettingValue() == null) {
 				g.setSettingValue("");
 			}
 		}

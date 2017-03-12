@@ -111,5 +111,14 @@ public class ReturnCodeConsts {
 	 * 不是合法的json格式
 	 */
 	public static final Integer INTERFACE_ILLEGAL_JSON_CODE = 912;
+	/**
+	 * 入参报文缺少参数 
+	 */
+	public static final Integer INTERFACE_LACK_PARAMETER_CODE = 917;
+	
+	/**
+	 * 报文的入参报文对应接口的参数不匹配
+	 */
+	public static final Integer INTERFACE_MESSAGE_ERROR_JSON_CODE = 914;
 	
 }

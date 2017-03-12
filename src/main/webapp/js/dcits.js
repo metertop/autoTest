@@ -523,7 +523,6 @@ function iterObj(jsonObj,parentName){
  * @param ajaxCallbackFun  ajax提交中的回调函数  如传入null,则使用默认
  */
 function formValidate(formObj,rules,messages,ajaxUrl,closeFlag,ajaxCallbackFun){
-	console.log(messages);
 	var callbackFun = function(data){
 		if(data.returnCode==0){	
 			refreshTable();
@@ -629,6 +628,8 @@ function labelCreate(data,option){
 	var datas = [];
 	if(!(data instanceof Array)){
 		datas.push(data);
+	} else {
+		datas = data;
 	}
 	$.each(datas,function(i,n){
         if(option && option[n]){
@@ -646,4 +647,65 @@ function labelCreate(data,option){
         }
     });
 	return html;
+}
+
+/**
+ * 获取地址栏参数
+ * @param name
+ * @returns
+ */
+function GetQueryString(name) {
+	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	var r = window.location.search.substr(1).match(reg);
+	if(r!=null)return decodeURIComponent(r[2]); return null;
+}
+
+
+function ellipsisData(dataName) {
+	return {
+  		"className":"ellipsis",
+	    "data":dataName,
+	    "render":CONSTANT.DATA_TABLES.COLUMNFUN.ELLIPSIS
+	};
+}
+
+
+/**
+ * layer弹出层
+ * 参数解释
+ * @param title 标题
+ * @param url  url地址或者html页面
+ * @param w 宽度,默认值
+ * @param h 高度,默认值
+ * @param type 类型 1-页面层 2-frame层
+ * @param success 成功打开之后的回调函数
+ * @returns index
+ */
+function layer_show(title,url,w,h,type,success){
+	if (title == null || title == '') {
+		title=false;
+	};
+	if (url == null || url == '') {
+		url="../../404.html";
+	};
+	if (w == null || w == '') {
+		w=800;
+	};
+	if (h == null || h == '') {
+		h=($(window).height() - 50);
+	};
+	if (type == null || type == '') {
+		type = 2;
+	}
+	index = layer.open({
+		type: type,
+		area: [w+'px', h +'px'],
+		fix: false, //不固定
+		maxmin: false,
+		shade:0.4,
+		title: title,
+		content: url,
+		success:success
+	});
+	return index;
 }

@@ -1,9 +1,11 @@
 package com.dcits.business.user.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.user.bean.Role;
+import com.dcits.business.user.dao.RoleDao;
 import com.dcits.business.user.service.RoleService;
 
 /**
@@ -14,6 +16,14 @@ import com.dcits.business.user.service.RoleService;
 
 @Service("roleService")
 public class RoleServiceImpl extends BaseServiceImpl<Role> implements RoleService {
+	
+	private RoleDao roleDao;
+	
+	@Autowired
+	public void setRoleDao(RoleDao roleDao) {
+		super.setBaseDao(roleDao);
+		this.roleDao = roleDao;
+	}
 
 	@Override
 	public Role get(String roleName) {

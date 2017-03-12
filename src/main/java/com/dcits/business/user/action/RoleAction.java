@@ -3,12 +3,14 @@ package com.dcits.business.user.action;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.user.bean.OperationInterface;
 import com.dcits.business.user.bean.Role;
+import com.dcits.business.user.service.RoleService;
 import com.dcits.constant.ReturnCodeConsts;
 import com.dcits.constant.SystemConsts;
 import com.dcits.util.StrutsUtils;
@@ -24,6 +26,14 @@ import com.dcits.util.StrutsUtils;
 public class RoleAction extends BaseAction<Role> {
 
 	private static final long serialVersionUID = 1L;
+	
+	private RoleService roleService;
+	@Autowired
+	public void setRoleService(RoleService roleService) {
+		super.setBaseService(roleService);
+		this.roleService = roleService;
+	}
+	
 	
 	/**
 	 * 指定角色被删除的操作权限的id集合
@@ -117,9 +127,9 @@ public class RoleAction extends BaseAction<Role> {
 		Role role = roleService.get(model.getRoleId());
 		Set<OperationInterface> ownOps = role.getOis();
 		
-		for (OperationInterface op:ops) {
+		for (OperationInterface op : ops) {
 			op.setIsOwn(false);			
-			for (OperationInterface op1:ownOps) {
+			for (OperationInterface op1 : ownOps) {
 				if ((int)op1.getOpId() == (int)op.getOpId()) {
 					op.setIsOwn(true);
 				}
@@ -144,7 +154,7 @@ public class RoleAction extends BaseAction<Role> {
 		OperationInterface o = null;
 		if (addOpIds != null && !addOpIds.isEmpty()) {
 			String[] addOpArray = addOpIds.split(",");
-			for (String s:addOpArray) {
+			for (String s : addOpArray) {
 				o = new OperationInterface();
 				o.setOpId(Integer.valueOf(s));
 				ops.add(o);
@@ -154,7 +164,7 @@ public class RoleAction extends BaseAction<Role> {
 		//更新删除的权限
 		if (delOpIds != null && !delOpIds.isEmpty()) {
 			String[] delOpArray = delOpIds.split(",");
-			for (String s:delOpArray) {
+			for (String s : delOpArray) {
 				o = new OperationInterface();
 				o.setOpId(Integer.valueOf(s));
 				ops.remove(o);

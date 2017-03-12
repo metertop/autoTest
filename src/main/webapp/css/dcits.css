@@ -50,3 +50,12 @@
 .fl {padding:10px; border-bottom:1px #CCC dashed;}
 .fn {width:750px; float:left;}
 .fd {width:70px; float:right;}
+
+/********************************************************/
+.show-interface-messages{
+	cursor: pointer;
+}
+.dct-message-json{
+	height: 350px;
+	padding: 5px 10px;
+}

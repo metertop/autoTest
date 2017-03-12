@@ -58,11 +58,9 @@ public class Message implements Serializable{
 	/**所有的场景*/
 	private Set<MessageScene> scenes = new HashSet<MessageScene>();
      
-	
+    /**所属接口名*/ 
 	private String interfaceName;
-    	
-	private String createUserName;
-     
+	
     @SuppressWarnings("unused")
 	private Integer sceneNum = this.getSceneNum();
 
@@ -96,28 +94,16 @@ public class Message implements Serializable{
         return this.messageId;
     }
     
-    public String getInterfaceName() {
-		return interfaceName;
+
+	public String getInterfaceName() {
+		if (this.interfaceInfo != null) {
+			return this.getInterfaceInfo().getInterfaceName();
+		}
+		return null;
 	}
-
-
-	public void setInterfaceName() {
-		this.interfaceName = interfaceInfo.getInterfaceName();
-	}
-
-
-	public String getCreateUserName() {
-		return createUserName;
-	}
-
-
-	public void setCreateUserName() {
-		this.createUserName = user.getRealName();
-	}
-
 
 	public Integer getSceneNum() {
-		return scenes.size();
+		return this.scenes.size();
 	}
 
 
@@ -149,7 +135,6 @@ public class Message implements Serializable{
         this.interfaceInfo = interfaceInfo;
     }
 
-    @JSON(serialize=false)
     public User getUser() {
         return this.user;
     }
@@ -211,14 +196,6 @@ public class Message implements Serializable{
     
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public void realStatus(){
-    	if(this.status.equals("0")&&this.interfaceInfo.getStatus().equals("0")){
-    		this.status = "0";
-    	}else{
-    		this.status ="1";
-    	}
     }
     
     public String getLastModifyUser() {

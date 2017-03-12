@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.message.bean.InterfaceInfo;
 import com.dcits.business.message.bean.Parameter;
+import com.dcits.business.message.service.ParameterService;
 import com.dcits.constant.ReturnCodeConsts;
 import com.dcits.util.JsonUtil;
 
@@ -24,7 +26,7 @@ import com.dcits.util.JsonUtil;
 
 @Controller
 @Scope("prototype")
-public class ParameterAction extends BaseAction<Parameter>{
+public class ParameterAction extends BaseAction<Parameter> {
 	
 	/**
 	 * LOGGER
@@ -32,6 +34,15 @@ public class ParameterAction extends BaseAction<Parameter>{
 	private static Logger LOGGER = Logger.getLogger(ParameterAction.class);
 
 	private static final long serialVersionUID = 1L;
+	
+	private ParameterService parameterService;
+	
+	@Autowired
+	public void setParameterService(ParameterService parameterService) {
+		super.setBaseService(parameterService);
+		this.parameterService = parameterService;
+	}
+	
 	
 	/**
 	 * 通过入参json报文{paramJson}批量导入接口参数
@@ -100,17 +111,16 @@ public class ParameterAction extends BaseAction<Parameter>{
 		jsonMap.put("returnCode", ReturnCodeConsts.INTERFACE_ILLEGAL_JSON_CODE);
 		
 		if (jsonTree != null) {			
-			Map<String,String> valueMap=(Map<String, String>)jsonTree[3];
-			List<String> paramList=(List<String>) jsonTree[0];
-			List<String> typeList=(List<String>) jsonTree[1];
-			List<String> pathList=(List<String>) jsonTree[2];
+			Map<String,String> valueMap = (Map<String, String>)jsonTree[3];
+			List<String> paramList = (List<String>) jsonTree[0];
+			List<String> typeList = (List<String>) jsonTree[1];
+			List<String> pathList = (List<String>) jsonTree[2];
 
 			Parameter param = null;
-			for (int i=0;i<paramList.size();i++) {
-				param=new Parameter(paramList.get(i), "", valueMap.get(paramList.get(i)), pathList.get(i), typeList.get(i));
-				InterfaceInfo info = new InterfaceInfo();
-				info.setInterfaceId(interfaceId);
-				param.setInterfaceInfo(info);
+			for (int i = 0;i < paramList.size();i++) {
+				param = new Parameter(paramList.get(i), "", valueMap.get(paramList.get(i)), pathList.get(i), typeList.get(i));				
+				param.setInterfaceInfo((new InterfaceInfo()));
+				param.getInterfaceInfo().setInterfaceId(interfaceId);
 				parameterService.save(param);
 			}
 			jsonMap.put("returnCode", ReturnCodeConsts.SUCCESS_CODE);

@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.system.bean.DataDB;
+import com.dcits.business.system.service.DataDBService;
 import com.dcits.constant.ReturnCodeConsts;
 import com.dcits.util.DBUtil;
 
@@ -26,6 +28,14 @@ public class DataDBAction extends BaseAction<DataDB> {
 	private static final long serialVersionUID = 1L;
 	
 	private static Logger LOGGER = Logger.getLogger(DataDBAction.class.getName());
+	
+	private DataDBService dataDBService;
+	
+	@Autowired
+	public void setDataDBService(DataDBService dataDBService) {
+		super.setBaseService(dataDBService);
+		this.dataDBService = dataDBService;
+	}
 	
 	/**
 	 * 编辑数据库信息

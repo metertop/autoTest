@@ -9,10 +9,13 @@ import org.apache.struts2.json.annotations.JSON;
 
 
 /**
- * MessageScene entity. @author MyEclipse Persistence Tools
+ * 接口自动化
+ * 报文场景
+ * @author xuwangcheng
+ * @version 1.0.0.0,2017.3.6
  */
 
-public class MessageScene implements Serializable{
+public class MessageScene implements Serializable {
 
 
     // Fields    
@@ -21,28 +24,47 @@ public class MessageScene implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 场景id
+	 */
 	private Integer messageSceneId;
-     private Message message;
-     private String sceneName;
-     private String validateRuleFlag;
-     private String mark;
-     private Set<TestData> testDatas = new HashSet<TestData>();
-
-     private Set<TestSet> testSets = new HashSet<TestSet>();
-     
-     private Set<TestResult> testResults = new HashSet<TestResult>();
-     
-     private Set<SceneValidateRule> rules = new HashSet<SceneValidateRule>();
-
-     private String interfaceName;
-     private String messageName;
-     private String validateMethodStr;
-     
-     
-     
-     
-     
-     
+	/**
+	 * 所属报文
+	 */
+	private Message message;
+	/**
+	 * 场景名
+	 */
+	private String sceneName;
+	/**
+	 * 验证规则标志
+	 * 0   默认验证使用测试配置中的默认验证字符串
+	 * 1  使用自定义的验证配置,需要验证多个参数具体的值
+	 * 2  使用自定义的验证规则,直接验证整个返回串
+	 */
+	private String validateRuleFlag;
+	/**
+	 * 备注
+	 */
+	private String mark;
+	/**
+	 * 该测试场景对应的测试数据
+	 */
+	private Set<TestData> testDatas = new HashSet<TestData>();
+	/**
+	 * 对应测试集
+	 */
+	private Set<TestSet> testSets = new HashSet<TestSet>();
+	 /**
+	  * 测试结果
+	  */
+	private Set<TestResult> testResults = new HashSet<TestResult>();
+	 /**
+	  * 验证规则
+	  */
+	private Set<SceneValidateRule> rules = new HashSet<SceneValidateRule>();
+	
+	private String validateMethodStr;
      
     // Constructors
 
@@ -75,13 +97,13 @@ public class MessageScene implements Serializable{
 	public void setValidateMethodStr() {
 		switch (this.getValidateRuleFlag()) {
 		case "0":
-			this.validateMethodStr = "ȫ����֤";
+			this.validateMethodStr = "全局默认";
 			break;
 		case "1":
-			this.validateMethodStr = "�ڵ���֤";
+			this.validateMethodStr = "入参验证";
 			break;
 		case "2":
-			this.validateMethodStr = "ȫ����֤";
+			this.validateMethodStr = "全文验证";
 			break;
 		}
 	}
@@ -117,27 +139,6 @@ public class MessageScene implements Serializable{
 	public void setTestResults(Set<TestResult> testResults) {
 		this.testResults = testResults;
 	}
-
-
-	public String getInterfaceName() {
-		return interfaceName;
-	}
-
-
-	public void setInterfaceName() {
-		this.interfaceName = message.getInterfaceInfo().getInterfaceName();
-	}
-
-
-	public String getMessageName() {
-		return messageName;
-	}
-
-
-	public void setMessageName() {
-		this.messageName = message.getMessageName();
-	}
-
 
 	@JSON(serialize=false)
     public Set<TestSet> getTestSets() {
@@ -180,8 +181,8 @@ public class MessageScene implements Serializable{
     @JSON(serialize=false)
     public Set<TestData> getTestDatas() {
     	Set<TestData> delTds=new HashSet<TestData>();
-    	for(TestData td:testDatas){
-    		if(td.getStatus().equals("1")){
+    	for (TestData td:testDatas) {
+    		if (td.getStatus().equals("1")) {
     			delTds.add(td);
     		}
     	}

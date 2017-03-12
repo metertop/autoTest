@@ -52,14 +52,9 @@
 				{{#if input}}	
 				{{#each input}}				
 					<input type="{{#if hidden}}hidden{{else}}text{{/if}}" class="input-text" id="{{name}}" name="{{name}}"
-						{{#if value}}value="{{value}}"{{/if}} {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}>					
+						{{#if value}}value="{{value}}"{{/if}} {{#if placeholder}}placeholder="{{placeholder}}"{{/if}}>{{#if embellish}}{{{embellish}}}{{/if}}					
 				{{/each}}	
-				{{/if}}						
-				{{#if textarea}}			
-				{{#each textarea}}					
-					<textarea class="textarea radius" {{#if placeholder}}placeholder="{{placeholder}}"{{/if}} id="{{name}}" name="{{name}}" {{#if value}}value="{{value}}"{{/if}}></textarea>						
-				{{/each}}	
-				{{/if}}	
+				{{/if}}										
 				{{#if select}}					
 				{{#each select}}					
 					<span class="select-box radius">
@@ -70,18 +65,23 @@
 							{{/each}}
 							{{/with}}
 			  			</select>
-             			</span>					
+             			</span>{{#if embellish}}{{{embellish}}}{{/if}}				
 				{{/each}}
 				{{/if}}	
 				{{#if button}}						
 				{{#each button}}					
-					<input type="button"  class="btn btn-{{style}} radius {{markClass}}"  value="{{value}}"/>					
+					<input type="button"  class="btn btn-{{style}} radius {{markClass}}"  value="{{value}}"/>{{#if embellish}}{{{embellish}}}{{/if}}					
 				{{/each}}
+				{{/if}}	
+				{{#if textarea}}			
+				{{#each textarea}}					
+					<textarea class="textarea radius" {{#if placeholder}}placeholder="{{placeholder}}"{{/if}} id="{{name}}" name="{{name}}" {{#if value}}value="{{value}}"{{/if}}></textarea>{{#if embellish}}{{{embellish}}}{{/if}}						
+				{{/each}}	
 				{{/if}}						
 			</div>
 		</div>	
 	{{else}}
-		<input type="hidden" id="{{name}}" name="{{name}}"/>
+		<input type="hidden" id="{{name}}" name="{{name}}" {{#if value}}value="{{value}}"{{/if}}/>
 	{{/if}}
 	{{/each}}
 	<div class="row cl">

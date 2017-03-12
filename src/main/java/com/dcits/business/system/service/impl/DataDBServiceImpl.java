@@ -1,9 +1,11 @@
 package com.dcits.business.system.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.system.bean.DataDB;
+import com.dcits.business.system.dao.DataDBDao;
 import com.dcits.business.system.service.DataDBService;
 
 /**
@@ -14,6 +16,15 @@ import com.dcits.business.system.service.DataDBService;
 
 @Service("dataDBService")
 public class DataDBServiceImpl extends BaseServiceImpl<DataDB> implements DataDBService {
+	
+	private DataDBDao dataDBDao;
+	
+	@Autowired
+	public void setDataDBDao(DataDBDao dataDBDao) {
+		super.setBaseDao(dataDBDao);
+		this.dataDBDao = dataDBDao;
+	}
+	
 	/**
 	 * 自定义dbId
 	 * @return

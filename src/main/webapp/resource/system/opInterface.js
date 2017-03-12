@@ -47,9 +47,7 @@ var columnsSetting = [
 	{
 		"data":null,
 	    "render":function(data, type, full, meta){
-	    	var d = [];
-	    	d.push(data.status);
-            return labelCreate(d);	    	
+            return labelCreate(data.status);	    	
 	    }
 	},{
 		"data":"mark",

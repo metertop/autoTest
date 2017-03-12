@@ -2,10 +2,12 @@ package com.dcits.business.message.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.message.bean.Parameter;
+import com.dcits.business.message.dao.ParameterDao;
 import com.dcits.business.message.service.ParameterService;
 
 /**
@@ -19,6 +21,15 @@ import com.dcits.business.message.service.ParameterService;
 @Service("parameterService")
 public class ParameterServiceImpl extends BaseServiceImpl<Parameter> implements ParameterService {
 
+	private ParameterDao parameterDao;
+	
+	@Autowired
+	public void setParameterDao(ParameterDao parameterDao) {
+		super.setBaseDao(parameterDao);
+		this.parameterDao = parameterDao;
+	}
+	
+	
 	@Override
 	public List<Parameter> findByInterfaceId(int interfaceId) {
 		// TODO Auto-generated method stub

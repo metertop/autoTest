@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.dispatcher.SessionMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.user.bean.User;
+import com.dcits.business.user.service.UserService;
 import com.dcits.constant.ReturnCodeConsts;
 import com.dcits.util.MD5Util;
 import com.dcits.util.StrutsUtils;
@@ -38,6 +40,15 @@ public class UserAction extends BaseAction<User>{
 	 */
 	private static Logger LOGGER = Logger.getLogger(UserAction.class);
 	
+	
+	private UserService userService;
+	@Autowired
+	public void setUserService(UserService userService) {
+		super.setBaseService(userService);
+		this.userService = userService;
+	}
+	
+	
 	/**
 	 * 用户登陆
 	 * @return
@@ -57,7 +68,7 @@ public class UserAction extends BaseAction<User>{
 		String msg = "账号或密码不正确,请重新输入!";
 		
 		if (model != null) {
-			if (user !=null && user.getUserId() == model.getUserId()) {
+			if (user != null && user.getUserId() == model.getUserId()) {
 				jsonMap.put("returnCode", ReturnCodeConsts.USER_RE_LOGIN_CODE);
 				jsonMap.put("msg", "你已登录该账号,请切换至不同的账号!");
 				return SUCCESS;
@@ -99,7 +110,7 @@ public class UserAction extends BaseAction<User>{
 	public String judgeLogin() {
 		User user = (User)StrutsUtils.getSessionMap().get("user");
 		jsonMap.put("returnCode", ReturnCodeConsts.NOT_LOGIN_CODE);
-		if (user!=null) {
+		if (user != null) {
 			jsonMap.put("returnCode", ReturnCodeConsts.SUCCESS_CODE);
 		}
 		return SUCCESS;

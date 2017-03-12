@@ -10,13 +10,14 @@ var parametersEditHmtl;
 /**
  * ajax地址
  */
-var GET_PARAMS_URL = "param-getParams"; //根据interfaceId来 获取parameters
+var PARAMS_GET_URL = "param-getParams"; //根据interfaceId来 获取parameters
 var PARAM_SAVE_URL = "param-save";   //保存新增的接口参数
 var PARAM_DEL_URL = "param-del";   //删除指定参数
 var PARAM_EDIT_URL = "param-edit";  //编辑参数的指定属性
 var PARAM_JSON_IMPORT_URL = "param-batchImportParams"; //导入json串
-var LIST_INTERFACE_URL = "interface-list"; //获取接口列表
-var CHECK_INTERFACE_NAME_URL = "interface-checkName"; //检查新增接口名是否重复
+
+var INTERFACE_LIST_URL = "interface-list"; //获取接口列表
+var INTERFACE_CHECK_NAME_URL = "interface-checkName"; //检查新增接口名是否重复
 var INTERFACE_EDIT_URL = "interface-edit";  //接口编辑
 var INTERFACE_GET_URL = "interface-get"; //获取指定接口信息
 var INTERFACE_DEL_URL = "interface-del"; //删除指定接口
@@ -118,7 +119,6 @@ var templateParams = {
 			objText:"user.realNameText",
 		},
 		{
-			edit:true,
 			name:"user.userId"
 							
 		},
@@ -142,7 +142,7 @@ var columnsSetting = [
               }},
           {"data":"interfaceId"},
           {
-          	"className":"ellipsis",
+          	"className":"ellipsis show-interface-messages",
 		    "data":"interfaceName",
           	"render":CONSTANT.DATA_TABLES.COLUMNFUN.ELLIPSIS
           	},
@@ -202,6 +202,12 @@ var columnsSetting = [
       ];	
 
 var eventList = {
+		".show-interface-messages":function(){
+			var data = table.row( $(this).parents('tr') ).data();			
+			$(this).attr("data-title", data.interfaceName + "-" + data.interfaceCnName + " " + "报文管理");
+			$(this).attr("_href", "resource/message/message.html?interfaceId=" + data.interfaceId);
+			Hui_admin_tab(this);			
+		},
 		".add-object":function(){
 			publish.renderParams.editPage.modeFlag = 0;					
 			layer_show("增加接口", editHtml, "850", "480",1);
@@ -282,7 +288,7 @@ var eventList = {
 var mySetting = {
 		eventList:eventList,
 		templateCallBack:function(df){
-			$("#parameters-page").load("_interface-Parameters.htm",function(){
+			$("#parameters-page").load("interface-Parameters.htm",function(){
 				parametersEditHmtl = $("#parameters-page").html();
 				$("#parameters-page").html('');
 				
@@ -296,7 +302,7 @@ var mySetting = {
 				interfaceName:{
 					required:true,
 					remote:{
-						url:CHECK_INTERFACE_NAME_URL,
+						url:INTERFACE_CHECK_NAME_URL,
 						type:"post",
 						dataType: "json",
 						data: {                   
@@ -331,7 +337,7 @@ var mySetting = {
 
 		},		
 		listPage:{
-			listUrl:LIST_INTERFACE_URL,
+			listUrl:INTERFACE_LIST_URL,
 			tableObj:".table-sort",
 			columnsSetting:columnsSetting,
 			columnsJson:[0,7,8,9,10]
@@ -348,7 +354,7 @@ $(function(){
 /**初始化接口参数数据*/
 function initParameters(){
 	$("#parameters-table").spinModal();
-	$.get(GET_PARAMS_URL+"?interfaceId="+interfaceId,function(data){
+	$.get(PARAMS_GET_URL+"?interfaceId="+interfaceId,function(data){
 		if(data.returnCode == 0){
 			var html = '';
 			$.each(data.data,function(i,n){

@@ -1,36 +1,15 @@
 package com.dcits.business.base.action;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.log4j.Logger;
 import org.apache.struts2.json.annotations.JSON;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dcits.business.base.bean.PageModel;
 import com.dcits.business.base.service.BaseService;
-import com.dcits.business.message.service.InterfaceInfoService;
-import com.dcits.business.message.service.InterfaceMockService;
-import com.dcits.business.message.service.MessageSceneService;
-import com.dcits.business.message.service.MessageService;
-import com.dcits.business.message.service.ParameterService;
-import com.dcits.business.message.service.SceneValidateRuleService;
-import com.dcits.business.message.service.TestConfigService;
-import com.dcits.business.message.service.TestDataService;
-import com.dcits.business.message.service.TestReportService;
-import com.dcits.business.message.service.TestResultService;
-import com.dcits.business.message.service.TestSetService;
-import com.dcits.business.system.service.DataDBService;
-import com.dcits.business.system.service.GlobalSettingService;
-import com.dcits.business.user.service.MailService;
-import com.dcits.business.user.service.OperationInterfaceService;
-import com.dcits.business.user.service.RoleService;
-import com.dcits.business.user.service.UserService;
 import com.dcits.constant.ReturnCodeConsts;
 import com.dcits.util.StrutsUtils;
 import com.opensymphony.xwork2.ActionSupport;
@@ -43,7 +22,7 @@ import com.opensymphony.xwork2.ModelDriven;
  * @param <T>
  */
 
-public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
+public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -55,7 +34,7 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	/**
 	 * BaseService
 	 */
-	protected BaseService<T> baseService;
+	private BaseService<T> baseService;
 	
 	/**
 	 * ajax调用返回的map
@@ -105,40 +84,9 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	 */
 	protected String checkNameFlag;
 	
-	@Autowired
-	protected UserService userService;
-	@Autowired
-	protected RoleService roleService;
-	@Autowired
-	protected OperationInterfaceService operationInterfaceService;
-	@Autowired
-	protected MailService mailService;
-	@Autowired
-	protected GlobalSettingService globalSettingService;
-	@Autowired
-	protected DataDBService dataDBService;
-	@Autowired
-	protected InterfaceInfoService interfaceInfoService;
-	@Autowired
-	protected InterfaceMockService interfaceMockService;
-	@Autowired
-	protected MessageService messageService;
-	@Autowired
-	protected MessageSceneService messageSceneService;
-	@Autowired
-	protected ParameterService parameterService;
-	@Autowired
-	protected SceneValidateRuleService sceneValidateRuleService;
-	@Autowired
-	protected TestConfigService testConfigService;
-	@Autowired
-	protected TestDataService testDataService;
-	@Autowired
-	protected TestReportService testReportService;
-	@Autowired
-	protected TestResultService testResultService;
-	@Autowired
-	protected TestSetService testSetService;
+	public void setBaseService(BaseService<T> baseService) {
+		this.baseService = baseService;
+	}
 	
 	/**
 	 * 通用 list方法
@@ -149,13 +97,16 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	@SuppressWarnings("unchecked")
 	public String list() {
 		Map<String,Object>  dt = StrutsUtils.getDTParameters();
-		PageModel<T> pu = baseService.findByPager(start, length,(String)dt.get("orderDataName"),(String)dt.get("orderType"),(String)dt.get("searchValue"),(List<String>)dt.get("dataParams"));		
+		PageModel<T> pu = baseService.findByPager(start, length
+				,(String)dt.get("orderDataName"),(String)dt.get("orderType")
+				,(String)dt.get("searchValue"),(List<String>)dt.get("dataParams"));
+		
 		jsonMap.put("draw", draw);
-		jsonMap.put("data",processListData(pu.getDatas()));
+		jsonMap.put("data", processListData(pu.getDatas()));
 		jsonMap.put("recordsTotal", pu.getRecordCount());		
 		jsonMap.put("recordsFiltered", pu.getRecordCount());
 		
-		if(!((String)dt.get("searchValue")).equals("")){
+		if (!((String)dt.get("searchValue")).equals("")) {
 			jsonMap.put("recordsFiltered", pu.getDatas().size());
 		}
 		
@@ -246,6 +197,17 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 	};
 	
 	
+	/**
+	 * list和listAll方法中对 数据的加工
+	 * 子类可重写该方法，对发给前台的数据进行再一次处理
+	 * @param o
+	 * @return
+	 */
+	public Object processListData(Object o) {		
+		return o;
+	}
+	
+	
 	
 	/**
 	 * 通过反射动态的创建对象
@@ -262,33 +224,7 @@ public class BaseAction<T> extends ActionSupport implements ModelDriven<T>{
 			throw new RuntimeException(e);			
 		}
 	}
-	
-	/**
-	 * 初始化将baseService 替换为指定的***Service
-	 * 具体说明参考BaserServiceImpl中的init方法
-	 * @throws Exception
-	 */
-	@PostConstruct
-	public void init() throws Exception {
 		
-		String clazzName = clazz.getSimpleName();
-		String clazzServiceName = clazzName.substring(0,1).toLowerCase() + clazzName.substring(1) + "Service";//toLowerCase首字母小写
-		Field serviceNameField = this.getClass().getSuperclass().getDeclaredField(clazzServiceName);
-		Object object = serviceNameField.get(this);
-		Field baseServiceNameField = this.getClass().getSuperclass().getDeclaredField("baseService");
-		baseServiceNameField.set(this, object);		
-	}
-	
-	/**
-	 * list和listAll方法中对 数据的加工
-	 * 子类可重写该方法，对发给前台的数据进行再一次处理
-	 * @param o
-	 * @return
-	 */
-	public Object processListData(Object o){		
-		return o;
-	}
-	
 	/************************************GET-SET***********************************************/
 	public void setDraw(Integer draw) {
 		this.draw = draw;

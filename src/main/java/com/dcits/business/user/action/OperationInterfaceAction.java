@@ -3,11 +3,13 @@ package com.dcits.business.user.action;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.dcits.business.base.action.BaseAction;
 import com.dcits.business.user.bean.OperationInterface;
+import com.dcits.business.user.service.OperationInterfaceService;
 import com.dcits.constant.ReturnCodeConsts;
 import com.dcits.constant.SystemConsts;
 
@@ -27,6 +29,14 @@ public class OperationInterfaceAction extends BaseAction<OperationInterface> {
 	 * 操作接口类型
 	 */
 	private Integer opType;
+	
+	private OperationInterfaceService operationInterfaceService;
+	
+	@Autowired
+	public void setOperationInterfaceService(OperationInterfaceService operationInterfaceService) {
+		super.setBaseService(operationInterfaceService);
+		this.operationInterfaceService = operationInterfaceService;
+	}
 	
 	
 	/**

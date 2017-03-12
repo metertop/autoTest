@@ -2,10 +2,12 @@ package com.dcits.business.user.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dcits.business.base.service.impl.BaseServiceImpl;
 import com.dcits.business.user.bean.Mail;
+import com.dcits.business.user.dao.MailDao;
 import com.dcits.business.user.service.MailService;
 
 /**
@@ -16,6 +18,14 @@ import com.dcits.business.user.service.MailService;
 
 @Service("mailService")
 public class MailServiceImpl extends BaseServiceImpl<Mail> implements MailService {
+	
+	private MailDao mailDao;
+	
+	@Autowired
+	public void setMailDao(MailDao mailDao) {
+		super.setBaseDao(mailDao);
+		this.mailDao = mailDao;
+	}
 
 	@Override
 	public int getNoReadNum(Integer receiveUserId) {

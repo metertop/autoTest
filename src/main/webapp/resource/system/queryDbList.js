@@ -118,7 +118,7 @@ var columnsSetting = [{"data":null,
 	    	var context = [{
 	    		title:"测试连接",
 	    		markClass:"db-test",
-	    		iconFont:"&#xe6f1;;"
+	    		iconFont:"&#xe6f1;"
 	    	},{
 	    		title:"编辑",
 	    		markClass:"db-edit",

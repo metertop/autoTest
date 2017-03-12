@@ -96,8 +96,78 @@
 <script type="text/javascript" src="libs/h-ui/js/H-ui.js"></script>
 <script>
     $(document).ready(function(){
-        
+    	getUserInfo();   
     });
+    
+    function getUserInfo(){
+    	var userInfo = {};
+    	var df = $.Deferred();
+    	df.done(function(){
+    		if (!($.isEmptyObject(userInfo))) {
+    			getSetting();       
+    	    	getMailNum(); 
+    	    	//setInterval(getMailNum,15000); 
+    			$("#group_name").text(userInfo.role.roleGroup);
+            	$("#real_name").text(userInfo.realName);
+            	$("#last_login_time").text(userInfo.lastLoginTime);
+                parent.$("#role_name").text(userInfo.role.roleName);
+                parent.$("#real_name").text(userInfo.realName);
+                parent.$("#user_id").val(userInfo.userId);
+                
+                if (userInfo.role.roleName != "admin") {
+                	parent.$(".adminPower").css("display","none");
+                }
+    		}
+    	});
+    	$.post("user-getLoginUserInfo",function(data) {
+    		if (data.returnCode == 0) {
+    			userInfo = data.data;
+    			df.resolve();
+    		} else if (data.returnCode == 7) {
+    			var username = getCookie("username");
+            	var password = getCookie("password");
+            	if (username!=null&&password != null) {
+            		$.post("user-toLogin",{
+                        username:username,
+                        password:password
+                    },function(data) {
+                        if (data.returnCode == 0) {
+                        	userInfo = data.data;
+                        	df.resolve();
+                        } else {
+                        	parent.window.location.href="login.html";
+                        }
+                    });
+            	} else {
+            		parent.window.location.href = "login.html";
+            	}
+    		}else{
+    			parent.window.location.href = "login.html";
+    		}	
+    		
+    	});
+    }
+    
+    //获取设置
+    function getSetting() {
+    	$.get("global-getWebSettings",function(data) {
+       		if(data.returnCode == 0){			
+       			$("#notice").text(data.notice);
+       			parent.$("#version").text("V"+data.version);
+       		}
+       	});
+    }
+    
+	//获取当前用户的未读邮件数量
+	function getMailNum(){
+		$.get("mail-getNoReadMailNum",function(data) {
+			if (data.returnCode === 0 && data.mailNum !== 0) {
+				parent.$(".noReadMailNum").text(data.mailNum);
+			} else {
+				parent.$(".noReadMailNum").text("");
+			}
+		});
+	}
 </script>
 </body>
 </html>

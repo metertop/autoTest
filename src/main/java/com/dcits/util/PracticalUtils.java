@@ -6,6 +6,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 /**
  * 实用小工具类
  * @author xuwangcheng
@@ -15,6 +20,26 @@ public class PracticalUtils {
 	
 	private PracticalUtils() {
 		throw new Error("Please don't instantiate me！");
+	}
+	
+	/**
+	 * 格式化美化json串
+	 * 同样可以 用此方法判断是否为json格式
+	 * @param uglyJSONString
+	 * @return
+	 */
+	public static String formatJsonStr(String uglyJSONString) {
+		 Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	        JsonParser jp = new JsonParser();
+	        try {
+	        	JsonElement je = jp.parse(uglyJSONString);
+		        String prettyJsonString = gson.toJson(je);
+		        return prettyJsonString;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+	        
 	}
 	
 	/**
